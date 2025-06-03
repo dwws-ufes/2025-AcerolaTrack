@@ -1,0 +1,8 @@
+services:
+  postgres:
+    image: postgres:17.5
+    volumes:
+      - db
+
+volumes:
+  db:
