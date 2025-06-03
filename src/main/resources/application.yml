@@ -1,0 +1,12 @@
+vaadin:
+  launch-browser: true
+server:
+  port: 8081
+
+spring:
+  application:
+    name: "acerolatrack"
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/postgres"
+    username: "postgres"
+    password: "example"

@@ -1,5 +1,3 @@
-import { injectGlobalWebcomponentCss } from 'Frontend/generated/jar-resources/theme-util.js';
-
 import '@vaadin/field-highlighter/src/vaadin-field-highlighter.js';
 import '@vaadin/common-frontend/ConnectionIndicator.js';
 import '@vaadin/polymer-legacy-adapter/style-modules.js';
@@ -81,6 +79,8 @@ import '@vaadin/grid/src/vaadin-grid-tree-toggle.js';
 import '@vaadin/upload/src/vaadin-upload.js';
 import '@vaadin/virtual-list/src/vaadin-virtual-list.js';
 import 'Frontend/generated/jar-resources/virtualListConnector.js';
+import '@vaadin/vaadin-lumo-styles/color-global.js';
+import '@vaadin/vaadin-lumo-styles/typography-global.js';
 import '@vaadin/vaadin-lumo-styles/sizing.js';
 import '@vaadin/vaadin-lumo-styles/spacing.js';
 import '@vaadin/vaadin-lumo-styles/style.js';
