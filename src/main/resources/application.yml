@@ -1,5 +1,7 @@
 vaadin:
   launch-browser: true
+  url-mapping: /front/*
+  exclude-urls: "/v1/*"
 server:
   port: 8081
 
