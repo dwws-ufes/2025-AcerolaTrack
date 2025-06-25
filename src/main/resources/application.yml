@@ -1,5 +1,5 @@
 vaadin:
-  launch-browser: true
+  launch-browser: false
   url-mapping: /front/*
   exclude-urls: "/v1/*"
 server:
