@@ -20,5 +20,17 @@ public class Task {
     @ManyToOne()
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
-
+    @ManyToMany()
+    @JoinTable(
+            name = "task_workers_join",
+            joinColumns = @JoinColumn(
+                    name = "task_id",
+                    referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "worker_id",
+                    referencedColumnName = "id"
+            )
+    )
+    private List<Worker> workers;
 }
