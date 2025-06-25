@@ -5,7 +5,15 @@ vaadin:
 server:
   port: 8081
 
+
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  security:
+    ignored: /**
   application:
     name: "acerolatrack"
   datasource:
