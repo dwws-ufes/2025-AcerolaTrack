@@ -9,7 +9,7 @@ server:
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
   security:
@@ -20,3 +20,5 @@ spring:
     url: "jdbc:postgresql://localhost:5432/postgres"
     username: "postgres"
     password: "example"
+  jackson:
+    property-naming-strategy: SNAKE_CASE

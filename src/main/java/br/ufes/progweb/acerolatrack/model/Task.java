@@ -1,13 +1,20 @@
 package br.ufes.progweb.acerolatrack.model;
 
+import br.ufes.progweb.acerolatrack.core.dto.TaskDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Task {
 
     @Id
@@ -35,4 +42,13 @@ public class Task {
             )
     )
     private List<Worker> workers;
+
+    public Task of(TaskDto taskDto) {
+        return Task.builder()
+                .name(taskDto.getName())
+                .startTime(taskDto.getStartTime())
+                .endTime(taskDto.getEndTime())
+
+                .build();
+    }
 }
