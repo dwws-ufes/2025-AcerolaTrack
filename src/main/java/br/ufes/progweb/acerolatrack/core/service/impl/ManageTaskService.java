@@ -9,6 +9,8 @@ import br.ufes.progweb.acerolatrack.model.Project;
 import br.ufes.progweb.acerolatrack.model.Task;
 import br.ufes.progweb.acerolatrack.model.Worker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +38,11 @@ public class ManageTaskService implements IManageTaskService {
 
     public List<Task> findAll() {
         return taskRepository.findAll();
+    }
+
+    @Override
+    public Page<Task> getAllTasks(Pageable pageable) {
+        return taskRepository.findAll(pageable);
     }
 
     private Optional<Task> getDependency(TaskDto taskDto) {

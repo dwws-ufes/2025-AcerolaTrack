@@ -9,6 +9,8 @@ import br.ufes.progweb.acerolatrack.model.Customer;
 import br.ufes.progweb.acerolatrack.model.Project;
 import br.ufes.progweb.acerolatrack.model.Worker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +36,11 @@ public class ManageProjectService implements IManageProjectService {
     @Override
     public List<Project> findAll() {
         return projectRepository.findAll();
+    }
+
+    @Override
+    public Page<Project> getAllProjects(Pageable pageable) {
+        return projectRepository.findAll(pageable);
     }
 
     private Optional<Customer> getCustomer(final Long customerId) {

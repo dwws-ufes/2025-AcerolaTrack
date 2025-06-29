@@ -6,6 +6,8 @@ import br.ufes.progweb.acerolatrack.core.service.IManageUserService;
 import br.ufes.progweb.acerolatrack.model.Manager;
 import br.ufes.progweb.acerolatrack.model.Worker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +25,11 @@ public class ManageUserService implements IManageUserService {
     @Override
     public Manager saveManager(Manager manager) {
         return managerRepository.save(manager);
+    }
+
+    @Override
+    public Page<Worker> getAllWorkers(Pageable pageable) {
+        return workerRepository.findAll(pageable);
     }
 
 }

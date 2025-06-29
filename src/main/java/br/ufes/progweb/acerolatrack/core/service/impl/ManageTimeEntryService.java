@@ -9,6 +9,8 @@ import br.ufes.progweb.acerolatrack.model.Task;
 import br.ufes.progweb.acerolatrack.model.TimeEntry;
 import br.ufes.progweb.acerolatrack.model.Worker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,6 +37,11 @@ public class ManageTimeEntryService implements IManageTimeEntryService {
 
     private Optional<Task> getTask(final Long taskId) {
         return taskId != null ? taskRepository.findById(taskId) : null;
+    }
+
+    @Override
+    public Page<TimeEntry> getAllTimeEntries(Pageable pageable) {
+        return timeEntryRepository.findAll(pageable);
     }
 
 }

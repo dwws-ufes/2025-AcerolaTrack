@@ -5,6 +5,9 @@ import br.ufes.progweb.acerolatrack.core.service.IManageTaskService;
 import br.ufes.progweb.acerolatrack.model.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +25,11 @@ public class TaskController {
         return manageTaskService.saveTask(taskDto);
     }
 
-    @GetMapping()
-    public List<Task> getTasks() {
-        return manageTaskService.findAll();
+    @GetMapping
+    public Page<Task> getAllTasks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return manageTaskService.getAllTasks(pageRequest);
     }
 }
