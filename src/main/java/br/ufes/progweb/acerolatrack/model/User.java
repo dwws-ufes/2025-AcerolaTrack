@@ -1,17 +1,18 @@
 package br.ufes.progweb.acerolatrack.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @MappedSuperclass
-public abstract class User {
+public abstract class User extends AuditEntity {
 
     private String username;
     private String password;
+    @Column(unique=true)
     private String email;
 
 }

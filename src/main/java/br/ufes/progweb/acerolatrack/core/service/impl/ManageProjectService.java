@@ -28,9 +28,7 @@ public class ManageProjectService implements IManageProjectService {
         var customer = getCustomer(projectDto.getCustomerId());
         var workers = getWorkers(projectDto.getWorkerIds());
 
-        var project = Project.of(projectDto, customer, workers);
-
-        return projectRepository.save(project);
+        return projectRepository.save(Project.of(projectDto, customer, workers));
     }
 
     @Override
