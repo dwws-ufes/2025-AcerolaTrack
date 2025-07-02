@@ -29,7 +29,7 @@ public class AcerolatrackApplication {
 					resp.sendError(404);
 				}
 			}
-		}, "/front/*");
+		}, "/frontend/*");
 		bean.setLoadOnStartup(1);
 		return bean;
 	}

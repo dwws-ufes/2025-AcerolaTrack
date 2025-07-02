@@ -1,6 +1,7 @@
 package br.ufes.progweb.acerolatrack.model;
 
 import br.ufes.progweb.acerolatrack.core.dto.TaskDto;
+import com.vaadin.flow.component.page.Page;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

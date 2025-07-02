@@ -3,6 +3,7 @@ package br.ufes.progweb.acerolatrack.core.controller;
 import br.ufes.progweb.acerolatrack.core.dto.TaskDto;
 import br.ufes.progweb.acerolatrack.core.service.IManageTaskService;
 import br.ufes.progweb.acerolatrack.model.Task;
+import com.vaadin.hilla.Endpoint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Endpoint
 @RestController
 @RequestMapping("/v1/tasks")
 @RequiredArgsConstructor
