@@ -12,8 +12,6 @@ public interface IManageProjectService {
 
     Project createProject(ProjectDto project);
 
-    List<Project> findAll();
-
     Page<Project> getAllProjects(Pageable pageable);
 
     Project updateProject(Long id, ProjectUpdateDto projectUpdateDto);

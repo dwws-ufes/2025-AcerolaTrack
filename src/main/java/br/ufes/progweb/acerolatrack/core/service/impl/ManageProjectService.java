@@ -36,13 +36,8 @@ public class ManageProjectService implements IManageProjectService {
     }
 
     @Override
-    public List<Project> findAll() {
-        return projectRepository.findAll();
-    }
-
-    @Override
     public Page<Project> getAllProjects(Pageable pageable) {
-        return projectRepository.findAll(pageable);
+        return projectRepository.findByStatusNot(Status.CANCELLED, pageable);
     }
 
     private Optional<Customer> getCustomer(final Long customerId) {

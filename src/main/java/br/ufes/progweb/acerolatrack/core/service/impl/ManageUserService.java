@@ -29,7 +29,7 @@ public class ManageUserService implements IManageUserService {
 
     @Override
     public Page<Worker> getAllWorkers(Pageable pageable) {
-        return workerRepository.findAll(pageable);
+        return workerRepository.findByActiveTrue(pageable);
     }
 
     @Override

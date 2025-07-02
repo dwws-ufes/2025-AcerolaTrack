@@ -10,8 +10,6 @@ import java.util.List;
 public interface IManageTaskService {
     Task saveTask(TaskDto task);
 
-    List<Task> findAll();
-
     Page<Task> getAllTasks(Pageable pageable);
 
     Task updateTask(Long id, TaskDto taskDto);

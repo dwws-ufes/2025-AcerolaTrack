@@ -36,13 +36,9 @@ public class ManageTaskService implements IManageTaskService {
         return taskRepository.save(task);
     }
 
-    public List<Task> findAll() {
-        return taskRepository.findAll();
-    }
-
     @Override
     public Page<Task> getAllTasks(Pageable pageable) {
-        return taskRepository.findAll(pageable);
+        return taskRepository.findByCancelledFalse(pageable);
     }
 
     private Optional<Task> getDependency(TaskDto taskDto) {

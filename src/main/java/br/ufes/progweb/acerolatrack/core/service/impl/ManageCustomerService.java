@@ -21,7 +21,7 @@ public class ManageCustomerService implements IManageCustomerService {
 
     @Override
     public Page<Customer> getAllCustomers(Pageable pageable) {
-        return customerRepository.findAll(pageable);
+        return customerRepository.findByActiveTrue(pageable);
     }
 
     @Override
