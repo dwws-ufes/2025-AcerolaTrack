@@ -27,5 +27,11 @@ public class Worker extends User {
     )
     private List<Project> projects;
     private boolean active = true;
+    private Role role;
+
+    public enum Role {
+        WORKER,
+        MANAGER
+    }
 }
 
