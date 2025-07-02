@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Task {
+public class Task extends AuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +42,7 @@ public class Task {
             )
     )
     private List<Worker> workers;
+    private boolean cancelled = false;
 
     public Task of(TaskDto taskDto) {
         return Task.builder()

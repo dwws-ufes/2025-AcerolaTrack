@@ -9,6 +9,8 @@ import br.ufes.progweb.acerolatrack.model.Project;
 import br.ufes.progweb.acerolatrack.model.Task;
 import br.ufes.progweb.acerolatrack.model.Worker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,8 +36,9 @@ public class ManageTaskService implements IManageTaskService {
         return taskRepository.save(task);
     }
 
-    public List<Task> findAll() {
-        return taskRepository.findAll();
+    @Override
+    public Page<Task> getAllTasks(Pageable pageable) {
+        return taskRepository.findByCancelledFalse(pageable);
     }
 
     private Optional<Task> getDependency(TaskDto taskDto) {
@@ -63,5 +66,34 @@ public class ManageTaskService implements IManageTaskService {
                 .project(project.orElse(null))
                 .workers(workers)
                 .build();
+    }
+
+    @Override
+    public Task updateTask(Long id, TaskDto taskDto) {
+        Task existingTask = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+
+        var dependency = getDependency(taskDto);
+        var project = getProject(taskDto);
+        var workers = getWorkers(taskDto);
+
+        if (taskDto.getName() != null) {
+            existingTask.setName(taskDto.getName());
+        }
+        existingTask.setStartTime(taskDto.getStartTime());
+        existingTask.setEndTime(taskDto.getEndTime());
+        existingTask.setDependency(dependency.orElse(null));
+        existingTask.setProject(project.orElse(null));
+        existingTask.setWorkers(workers);
+
+        return taskRepository.save(existingTask);
+    }
+
+    @Override
+    public void deleteTask(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+        task.setCancelled(true);
+        taskRepository.save(task);
     }
 }
