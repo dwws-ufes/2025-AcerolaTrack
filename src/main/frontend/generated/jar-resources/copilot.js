@@ -1,1 +1,4 @@
-import "./copilot/copilot-CjVeA4wK.js";
+import { as as o } from "./copilot/copilot-C3Q8RayU.js";
+export {
+  o as _registerImporter
+};

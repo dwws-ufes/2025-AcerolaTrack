@@ -4,6 +4,7 @@ import br.ufes.progweb.acerolatrack.core.dto.ProjectDto;
 import br.ufes.progweb.acerolatrack.core.dto.ProjectUpdateDto;
 import br.ufes.progweb.acerolatrack.core.service.IManageProjectService;
 import br.ufes.progweb.acerolatrack.model.Project;
+import com.vaadin.hilla.Endpoint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Endpoint
 @RestController
 @RequestMapping("/v1/projects")
 @RequiredArgsConstructor
