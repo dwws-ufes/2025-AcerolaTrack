@@ -13,4 +13,6 @@ public interface IManageTaskService {
     List<Task> findAll();
 
     Page<Task> getAllTasks(Pageable pageable);
+
+    Task updateTask(Long id, TaskDto taskDto);
 }

@@ -71,4 +71,30 @@ public class ManageTaskService implements IManageTaskService {
                 .workers(workers)
                 .build();
     }
+
+    @Override
+    public Task updateTask(Long id, TaskDto taskDto) {
+        Task existingTask = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+
+        var dependency = getDependency(taskDto);
+        var project = getProject(taskDto);
+        var workers = getWorkers(taskDto);
+
+        if (taskDto.getName() != null) {
+            existingTask.setName(taskDto.getName());
+        }
+        if (taskDto.getStartTime() != null) {
+            existingTask.setStartTime(taskDto.getStartTime());
+        }
+        if (taskDto.getEndTime() != null) {
+            existingTask.setEndTime(taskDto.getEndTime());
+        }
+
+        existingTask.setDependency(dependency.orElse(null));
+        existingTask.setProject(project.orElse(null));
+        existingTask.setWorkers(workers);
+
+        return taskRepository.save(existingTask);
+    }
 }

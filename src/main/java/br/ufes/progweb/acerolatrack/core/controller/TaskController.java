@@ -32,4 +32,10 @@ public class TaskController {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return manageTaskService.getAllTasks(pageRequest);
     }
+
+    @PutMapping("/{id}")
+    public Task updateTask(@PathVariable Long id, @RequestBody TaskDto taskDto) {
+        log.info("Updating task with id: {}", id);
+        return manageTaskService.updateTask(id, taskDto);
+    }
 }
