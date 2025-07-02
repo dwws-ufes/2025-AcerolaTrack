@@ -11,4 +11,6 @@ public interface IManageTimeEntryService {
     Page<TimeEntry> getAllTimeEntries(Pageable pageable);
 
     TimeEntry updateTimeEntry(Long id, TimeEntryDto timeEntryDto);
+
+    void deleteTimeEntry(Long id);
 }

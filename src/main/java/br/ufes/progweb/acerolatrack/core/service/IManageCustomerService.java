@@ -11,4 +11,6 @@ public interface IManageCustomerService {
     Page<Customer> getAllCustomers(Pageable pageable);
 
     Customer updateCustomerName(Long id, String name);
+
+    void deleteCustomer(Long id);
 }

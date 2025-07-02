@@ -65,4 +65,12 @@ public class ManageTimeEntryService implements IManageTimeEntryService {
 
         return timeEntryRepository.save(existingTimeEntry);
     }
+
+    @Override
+    public void deleteTimeEntry(Long id) {
+        if (!timeEntryRepository.existsById(id)) {
+            throw new RuntimeException("Time entry not found with id: " + id);
+        }
+        timeEntryRepository.deleteById(id);
+    }
 }

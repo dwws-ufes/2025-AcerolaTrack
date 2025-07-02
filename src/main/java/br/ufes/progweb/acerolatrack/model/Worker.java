@@ -1,10 +1,14 @@
 package br.ufes.progweb.acerolatrack.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
+@Data
 public class Worker extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //provavelmente tem que mudar de estrategia depois
@@ -22,4 +26,6 @@ public class Worker extends User {
             )
     )
     private List<Project> projects;
+    private boolean active = true;
 }
+

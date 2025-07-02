@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -39,5 +40,12 @@ public class TimeEntryController {
             @RequestBody TimeEntryDto timeEntryDto) {
         log.info("Updating time entry with id: {}", id);
         return manageTimeEntryService.updateTimeEntry(id, timeEntryDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTimeEntry(@PathVariable Long id) {
+        log.info("Deleting time entry with id: {}", id);
+        manageTimeEntryService.deleteTimeEntry(id);
     }
 }

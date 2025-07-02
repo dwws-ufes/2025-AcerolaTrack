@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,5 +39,12 @@ public class CustomerController {
             @RequestBody String name) {
         log.info("Updating customer name. ID: {}, New name: {}", id, name);
         return manageCustomerService.updateCustomerName(id, name);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCustomer(@PathVariable Long id) {
+        log.info("Deactivating customer with id: {}", id);
+        manageCustomerService.deleteCustomer(id);
     }
 }

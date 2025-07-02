@@ -32,4 +32,11 @@ public class ManageUserService implements IManageUserService {
         return workerRepository.findAll(pageable);
     }
 
+    @Override
+    public void deleteWorker(Long id) {
+        Worker worker = workerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Worker not found with id: " + id));
+        worker.setActive(false);
+        workerRepository.save(worker);
+    }
 }

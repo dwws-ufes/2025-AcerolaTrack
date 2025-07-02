@@ -31,4 +31,12 @@ public class ManageCustomerService implements IManageCustomerService {
         customer.setName(name);
         return customerRepository.save(customer);
     }
+
+    @Override
+    public void deleteCustomer(Long id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + id));
+        customer.setActive(false);
+        customerRepository.save(customer);
+    }
 }

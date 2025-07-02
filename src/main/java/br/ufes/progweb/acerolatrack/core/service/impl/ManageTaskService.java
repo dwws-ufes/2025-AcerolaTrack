@@ -92,4 +92,12 @@ public class ManageTaskService implements IManageTaskService {
 
         return taskRepository.save(existingTask);
     }
+
+    @Override
+    public void deleteTask(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+        task.setCancelled(true);
+        taskRepository.save(task);
+    }
 }

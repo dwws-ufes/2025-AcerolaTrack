@@ -15,5 +15,6 @@ public class Customer extends AuditEntity {
     private String name;
     @Column(unique=true)
     private String cpf;
+    private boolean active = true;
 
 }

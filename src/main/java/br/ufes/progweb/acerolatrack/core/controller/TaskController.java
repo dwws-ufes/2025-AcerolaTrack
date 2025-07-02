@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,5 +38,12 @@ public class TaskController {
     public Task updateTask(@PathVariable Long id, @RequestBody TaskDto taskDto) {
         log.info("Updating task with id: {}", id);
         return manageTaskService.updateTask(id, taskDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTask(@PathVariable Long id) {
+        log.info("Cancelling task with id: {}", id);
+        manageTaskService.deleteTask(id);
     }
 }

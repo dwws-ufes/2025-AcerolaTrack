@@ -9,6 +9,7 @@ import br.ufes.progweb.acerolatrack.core.service.IManageProjectService;
 import br.ufes.progweb.acerolatrack.model.Customer;
 import br.ufes.progweb.acerolatrack.model.Project;
 import br.ufes.progweb.acerolatrack.model.Worker;
+import br.ufes.progweb.acerolatrack.model.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -92,5 +93,13 @@ public class ManageProjectService implements IManageProjectService {
         }
 
         return projectRepository.save(existingProject);
+    }
+
+    @Override
+    public void deleteProject(Long id) {
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Project not found with id: " + id));
+        project.setStatus(Status.CANCELLED);
+        projectRepository.save(project);
     }
 }

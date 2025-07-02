@@ -42,6 +42,7 @@ public class Task extends AuditEntity {
             )
     )
     private List<Worker> workers;
+    private boolean cancelled = false;
 
     public Task of(TaskDto taskDto) {
         return Task.builder()

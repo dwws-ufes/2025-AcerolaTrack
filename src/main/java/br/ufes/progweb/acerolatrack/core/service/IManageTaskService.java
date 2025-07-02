@@ -15,4 +15,6 @@ public interface IManageTaskService {
     Page<Task> getAllTasks(Pageable pageable);
 
     Task updateTask(Long id, TaskDto taskDto);
+
+    void deleteTask(Long id);
 }

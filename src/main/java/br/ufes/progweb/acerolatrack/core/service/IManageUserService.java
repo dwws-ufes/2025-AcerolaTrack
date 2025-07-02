@@ -11,4 +11,6 @@ public interface IManageUserService {
     Manager saveManager(Manager manager);
 
     Page<Worker> getAllWorkers(Pageable pageable);
+
+    void deleteWorker(Long id);
 }

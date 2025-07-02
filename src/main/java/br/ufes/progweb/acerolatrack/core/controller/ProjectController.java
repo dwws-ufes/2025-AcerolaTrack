@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,5 +39,12 @@ public class ProjectController {
             @PathVariable Long id,
             @RequestBody ProjectUpdateDto projectUpdateDto) {
         return manageProjectService.updateProject(id, projectUpdateDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProject(@PathVariable Long id) {
+        log.info("Cancelling project with id: {}", id);
+        manageProjectService.deleteProject(id);
     }
 }

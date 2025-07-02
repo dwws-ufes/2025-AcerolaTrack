@@ -17,4 +17,6 @@ public interface IManageProjectService {
     Page<Project> getAllProjects(Pageable pageable);
 
     Project updateProject(Long id, ProjectUpdateDto projectUpdateDto);
+
+    void deleteProject(Long id);
 }
