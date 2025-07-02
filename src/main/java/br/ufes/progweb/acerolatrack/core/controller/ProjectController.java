@@ -4,12 +4,14 @@ import br.ufes.progweb.acerolatrack.core.dto.ProjectDto;
 import br.ufes.progweb.acerolatrack.core.dto.ProjectUpdateDto;
 import br.ufes.progweb.acerolatrack.core.service.IManageProjectService;
 import br.ufes.progweb.acerolatrack.model.Project;
+import br.ufes.progweb.acerolatrack.model.ProjectReport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -46,5 +48,11 @@ public class ProjectController {
     public void deleteProject(@PathVariable Long id) {
         log.info("Cancelling project with id: {}", id);
         manageProjectService.deleteProject(id);
+    }
+
+    @GetMapping("/{projectId}/report")
+    public ResponseEntity<ProjectReport> getProjectReport(@PathVariable Long projectId) {
+        ProjectReport report = manageProjectService.getProjectReport(projectId);
+        return ResponseEntity.ok(report);
     }
 }

@@ -4,18 +4,19 @@ import br.ufes.progweb.acerolatrack.core.dto.ProjectDto;
 import br.ufes.progweb.acerolatrack.core.dto.ProjectUpdateDto;
 import br.ufes.progweb.acerolatrack.core.repository.CustomerRepository;
 import br.ufes.progweb.acerolatrack.core.repository.ProjectRepository;
+import br.ufes.progweb.acerolatrack.core.repository.TimeEntryRepository;
 import br.ufes.progweb.acerolatrack.core.repository.WorkerRepository;
 import br.ufes.progweb.acerolatrack.core.service.IManageProjectService;
-import br.ufes.progweb.acerolatrack.model.Customer;
-import br.ufes.progweb.acerolatrack.model.Project;
-import br.ufes.progweb.acerolatrack.model.Worker;
-import br.ufes.progweb.acerolatrack.model.Status;
+import br.ufes.progweb.acerolatrack.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -25,7 +26,7 @@ public class ManageProjectService implements IManageProjectService {
     private final ProjectRepository projectRepository;
     private final CustomerRepository customerRepository;
     private final WorkerRepository workerRepository;
-
+    private final TimeEntryRepository timeEntryRepository;
 
     @Override
     public Project createProject(ProjectDto projectDto) {
@@ -41,7 +42,7 @@ public class ManageProjectService implements IManageProjectService {
     }
 
     private Optional<Customer> getCustomer(final Long customerId) {
-        return customerId != null ? customerRepository.findById(customerId) : null;
+        return customerId != null ? customerRepository.findById(customerId) : Optional.empty();
 
     }
 
@@ -70,7 +71,7 @@ public class ManageProjectService implements IManageProjectService {
         if (projectUpdateDto.getDescription() != null) {
             existingProject.setDescription(projectUpdateDto.getDescription());
         }
-            existingProject.setStatus(projectUpdateDto.getStatus());
+        existingProject.setStatus(projectUpdateDto.getStatus());
 
         if (projectUpdateDto.getCustomerId() != null) {
             Customer customer = customerRepository.findById(projectUpdateDto.getCustomerId())
@@ -96,5 +97,32 @@ public class ManageProjectService implements IManageProjectService {
                 .orElseThrow(() -> new RuntimeException("Project not found with id: " + id));
         project.setStatus(Status.CANCELLED);
         projectRepository.save(project);
+    }
+
+    @Override
+    public ProjectReport getProjectReport(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        List<TimeEntry> timeEntries = timeEntryRepository.findByTaskProjectId(projectId);
+
+        Map<String, Integer> hoursPerWorker = new HashMap<>();
+        int totalHours = 0;
+
+        for (TimeEntry entry : timeEntries) {
+            Worker worker = entry.getWorker();
+            Integer hours = entry.getTotalTime();
+
+            String workerName = worker.getUsername();
+            hoursPerWorker.merge(workerName, hours, Integer::sum);
+            totalHours += hours;
+        }
+
+        return ProjectReport.builder()
+                .projectId(project.getId())
+                .projectName(project.getName())
+                .minutesPerWorker(hoursPerWorker)
+                .total(totalHours)
+                .build();
     }
 }
