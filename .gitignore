@@ -1,10 +1,6 @@
 /target/
 .gradle
 build/
-!**/src/main/**/target/
-!**/src/test/**/target/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
 .DS_Store
 
