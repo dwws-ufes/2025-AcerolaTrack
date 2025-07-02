@@ -1,6 +1,7 @@
 package br.ufes.progweb.acerolatrack.core.service.impl;
 
 import br.ufes.progweb.acerolatrack.core.dto.ProjectDto;
+import br.ufes.progweb.acerolatrack.core.dto.ProjectUpdateDto;
 import br.ufes.progweb.acerolatrack.core.repository.CustomerRepository;
 import br.ufes.progweb.acerolatrack.core.repository.ProjectRepository;
 import br.ufes.progweb.acerolatrack.core.repository.WorkerRepository;
@@ -55,5 +56,46 @@ public class ManageProjectService implements IManageProjectService {
                 .map(Optional::get)
                 .toList();
 
+    }
+
+    @Override
+    public Project updateProject(Long id, ProjectUpdateDto projectUpdateDto) {
+        Project existingProject = projectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Project not found with id: " + id));
+
+        // Update basic fields if they are not null
+        if (projectUpdateDto.getName() != null) {
+            existingProject.setName(projectUpdateDto.getName());
+        }
+        if (projectUpdateDto.getStartTime() != null) {
+            existingProject.setStartTime(projectUpdateDto.getStartTime());
+        }
+        if (projectUpdateDto.getEndTime() != null) {
+            existingProject.setEndTime(projectUpdateDto.getEndTime());
+        }
+        if (projectUpdateDto.getDueDate() != null) {
+            existingProject.setDueDate(projectUpdateDto.getDueDate());
+        }
+        if (projectUpdateDto.getDescription() != null) {
+            existingProject.setDescription(projectUpdateDto.getDescription());
+        }
+        if (projectUpdateDto.getStatus() != null) {
+            existingProject.setStatus(projectUpdateDto.getStatus());
+        }
+
+        // Update customer if customerId is provided
+        if (projectUpdateDto.getCustomerId() != null) {
+            Customer customer = customerRepository.findById(projectUpdateDto.getCustomerId())
+                    .orElseThrow(() -> new RuntimeException("Customer not found with id: " + projectUpdateDto.getCustomerId()));
+            existingProject.setCustomer(customer);
+        }
+
+        // Update workers if workerIds is provided
+        if (projectUpdateDto.getWorkerIds() != null && !projectUpdateDto.getWorkerIds().isEmpty()) {
+            List<Worker> workers = workerRepository.findAllById(projectUpdateDto.getWorkerIds());
+            existingProject.setWorkers(workers);
+        }
+
+        return projectRepository.save(existingProject);
     }
 }

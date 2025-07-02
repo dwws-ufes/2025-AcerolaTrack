@@ -23,4 +23,12 @@ public class ManageCustomerService implements IManageCustomerService {
     public Page<Customer> getAllCustomers(Pageable pageable) {
         return customerRepository.findAll(pageable);
     }
+
+    @Override
+    public Customer updateCustomerName(Long id, String name) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        customer.setName(name);
+        return customerRepository.save(customer);
+    }
 }
