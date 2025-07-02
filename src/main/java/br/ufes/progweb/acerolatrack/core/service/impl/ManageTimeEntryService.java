@@ -44,4 +44,25 @@ public class ManageTimeEntryService implements IManageTimeEntryService {
         return timeEntryRepository.findAll(pageable);
     }
 
+    @Override
+    public TimeEntry updateTimeEntry(Long id, TimeEntryDto timeEntryDto) {
+        TimeEntry existingTimeEntry = timeEntryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("TimeEntry not found with id: " + id));
+
+        var worker = getWorker(timeEntryDto.getWorkerId());
+        var task = getTask(timeEntryDto.getTaskId());
+
+        if (timeEntryDto.getDescription() != null) {
+            existingTimeEntry.setDescription(timeEntryDto.getDescription());
+        }
+        existingTimeEntry.setStartTime(timeEntryDto.getStartTime());
+        existingTimeEntry.setEndTime(timeEntryDto.getEndTime());
+        existingTimeEntry.setTag(timeEntryDto.getTag());
+        existingTimeEntry.setTotalTime(timeEntryDto.getTotalTime());
+        existingTimeEntry.setWorker(worker.orElse(null));
+        existingTimeEntry.setTask(task.orElse(null));
+
+
+        return timeEntryRepository.save(existingTimeEntry);
+    }
 }

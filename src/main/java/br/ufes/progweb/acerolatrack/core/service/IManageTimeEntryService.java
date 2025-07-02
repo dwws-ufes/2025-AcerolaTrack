@@ -9,4 +9,6 @@ public interface IManageTimeEntryService {
     TimeEntry createTimeEntry(TimeEntryDto timeEntryDto);
 
     Page<TimeEntry> getAllTimeEntries(Pageable pageable);
+
+    TimeEntry updateTimeEntry(Long id, TimeEntryDto timeEntryDto);
 }

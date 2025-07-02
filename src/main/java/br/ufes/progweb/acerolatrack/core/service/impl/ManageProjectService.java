@@ -63,37 +63,32 @@ public class ManageProjectService implements IManageProjectService {
         Project existingProject = projectRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Project not found with id: " + id));
 
-        // Update basic fields if they are not null
         if (projectUpdateDto.getName() != null) {
             existingProject.setName(projectUpdateDto.getName());
         }
-        if (projectUpdateDto.getStartTime() != null) {
-            existingProject.setStartTime(projectUpdateDto.getStartTime());
-        }
-        if (projectUpdateDto.getEndTime() != null) {
-            existingProject.setEndTime(projectUpdateDto.getEndTime());
-        }
-        if (projectUpdateDto.getDueDate() != null) {
-            existingProject.setDueDate(projectUpdateDto.getDueDate());
-        }
+
+        existingProject.setStartTime(projectUpdateDto.getStartTime());
+        existingProject.setEndTime(projectUpdateDto.getEndTime());
+        existingProject.setDueDate(projectUpdateDto.getDueDate());
+
         if (projectUpdateDto.getDescription() != null) {
             existingProject.setDescription(projectUpdateDto.getDescription());
         }
-        if (projectUpdateDto.getStatus() != null) {
             existingProject.setStatus(projectUpdateDto.getStatus());
-        }
 
-        // Update customer if customerId is provided
         if (projectUpdateDto.getCustomerId() != null) {
             Customer customer = customerRepository.findById(projectUpdateDto.getCustomerId())
                     .orElseThrow(() -> new RuntimeException("Customer not found with id: " + projectUpdateDto.getCustomerId()));
             existingProject.setCustomer(customer);
+        } else {
+            existingProject.setCustomer(null);
         }
 
-        // Update workers if workerIds is provided
         if (projectUpdateDto.getWorkerIds() != null && !projectUpdateDto.getWorkerIds().isEmpty()) {
             List<Worker> workers = workerRepository.findAllById(projectUpdateDto.getWorkerIds());
             existingProject.setWorkers(workers);
+        } else {
+            existingProject.setWorkers(null);
         }
 
         return projectRepository.save(existingProject);

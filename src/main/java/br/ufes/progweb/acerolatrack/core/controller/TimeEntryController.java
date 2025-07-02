@@ -8,12 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/time-entries")
@@ -38,4 +33,11 @@ public class TimeEntryController {
         return manageTimeEntryService.getAllTimeEntries(pageRequest);
     }
 
+    @PutMapping("/{id}")
+    public TimeEntry updateTimeEntry(
+            @PathVariable Long id,
+            @RequestBody TimeEntryDto timeEntryDto) {
+        log.info("Updating time entry with id: {}", id);
+        return manageTimeEntryService.updateTimeEntry(id, timeEntryDto);
+    }
 }

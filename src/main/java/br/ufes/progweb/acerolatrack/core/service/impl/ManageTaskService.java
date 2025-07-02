@@ -84,13 +84,8 @@ public class ManageTaskService implements IManageTaskService {
         if (taskDto.getName() != null) {
             existingTask.setName(taskDto.getName());
         }
-        if (taskDto.getStartTime() != null) {
-            existingTask.setStartTime(taskDto.getStartTime());
-        }
-        if (taskDto.getEndTime() != null) {
-            existingTask.setEndTime(taskDto.getEndTime());
-        }
-
+        existingTask.setStartTime(taskDto.getStartTime());
+        existingTask.setEndTime(taskDto.getEndTime());
         existingTask.setDependency(dependency.orElse(null));
         existingTask.setProject(project.orElse(null));
         existingTask.setWorkers(workers);
