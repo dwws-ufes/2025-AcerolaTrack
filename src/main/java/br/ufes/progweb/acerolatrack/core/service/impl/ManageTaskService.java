@@ -6,7 +6,7 @@ import br.ufes.progweb.acerolatrack.core.repository.TaskRepository;
 import br.ufes.progweb.acerolatrack.core.repository.WorkerRepository;
 import br.ufes.progweb.acerolatrack.core.service.IManageTaskService;
 import br.ufes.progweb.acerolatrack.model.Project;
-import br.ufes.progweb.acerolatrack.model.Task;
+import br.ufes.progweb.acerolatrack.model.TaskOld;
 import br.ufes.progweb.acerolatrack.model.Worker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +24,7 @@ public class ManageTaskService implements IManageTaskService {
     private final ProjectRepository projectRepository;
     private final WorkerRepository workerRepository;
 
-    public Task saveTask(TaskDto taskDto) {
+    public TaskOld saveTask(TaskDto taskDto) {
         var dependency = getDependency(taskDto);
         var project = getProject(taskDto);
         var workers = getWorkers(taskDto);
@@ -37,11 +37,11 @@ public class ManageTaskService implements IManageTaskService {
     }
 
     @Override
-    public Page<Task> getAllTasks(Pageable pageable) {
+    public Page<TaskOld> getAllTasks(Pageable pageable) {
         return taskRepository.findByCancelledFalse(pageable);
     }
 
-    private Optional<Task> getDependency(TaskDto taskDto) {
+    private Optional<TaskOld> getDependency(TaskDto taskDto) {
         return taskDto.getDependencyId() != null ? taskRepository.findById(taskDto.getDependencyId()) : Optional.empty();
     }
 
@@ -57,8 +57,8 @@ public class ManageTaskService implements IManageTaskService {
                 .toList();
     }
 
-    private Task getTaskFromDto(TaskDto taskDto, Optional<Task> dependency, Optional<Project> project, List<Worker> workers) {
-        return Task.builder()
+    private TaskOld getTaskFromDto(TaskDto taskDto, Optional<TaskOld> dependency, Optional<Project> project, List<Worker> workers) {
+        return TaskOld.builder()
                 .name(taskDto.getName())
                 .startTime(taskDto.getStartTime())
                 .endTime(taskDto.getEndTime())
@@ -69,8 +69,8 @@ public class ManageTaskService implements IManageTaskService {
     }
 
     @Override
-    public Task updateTask(Long id, TaskDto taskDto) {
-        Task existingTask = taskRepository.findById(id)
+    public TaskOld updateTask(Long id, TaskDto taskDto) {
+        TaskOld existingTaskOld = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
 
         var dependency = getDependency(taskDto);
@@ -78,22 +78,22 @@ public class ManageTaskService implements IManageTaskService {
         var workers = getWorkers(taskDto);
 
         if (taskDto.getName() != null) {
-            existingTask.setName(taskDto.getName());
+            existingTaskOld.setName(taskDto.getName());
         }
-        existingTask.setStartTime(taskDto.getStartTime());
-        existingTask.setEndTime(taskDto.getEndTime());
-        existingTask.setDependency(dependency.orElse(null));
-        existingTask.setProject(project.orElse(null));
-        existingTask.setWorkers(workers);
+        existingTaskOld.setStartTime(taskDto.getStartTime());
+        existingTaskOld.setEndTime(taskDto.getEndTime());
+        existingTaskOld.setDependency(dependency.orElse(null));
+        existingTaskOld.setProject(project.orElse(null));
+        existingTaskOld.setWorkers(workers);
 
-        return taskRepository.save(existingTask);
+        return taskRepository.save(existingTaskOld);
     }
 
     @Override
     public void deleteTask(Long id) {
-        Task task = taskRepository.findById(id)
+        TaskOld taskOld = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
-        task.setCancelled(true);
-        taskRepository.save(task);
+        taskOld.setCancelled(true);
+        taskRepository.save(taskOld);
     }
 }

@@ -1,7 +1,7 @@
 vaadin:
   launch-browser: false
-  url-mapping: /front/*
   exclude-urls: "/v1/*"
+  allowed-packages: "com.vaadin,org.vaadin,com.flowingcode,com.example.app"
 server:
   port: 8081
 

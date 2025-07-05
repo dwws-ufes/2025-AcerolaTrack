@@ -2,7 +2,7 @@ package br.ufes.progweb.acerolatrack.core.controller;
 
 import br.ufes.progweb.acerolatrack.core.dto.TaskDto;
 import br.ufes.progweb.acerolatrack.core.service.IManageTaskService;
-import br.ufes.progweb.acerolatrack.model.Task;
+import br.ufes.progweb.acerolatrack.model.TaskOld;
 import com.vaadin.hilla.Endpoint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Endpoint
 @RestController
@@ -23,13 +21,13 @@ public class TaskController {
     private final IManageTaskService manageTaskService;
 
     @PostMapping("/create")
-    public Task createTask(@RequestBody TaskDto taskDto) {
+    public TaskOld createTask(@RequestBody TaskDto taskDto) {
         log.info("Creating task: {}", taskDto.getName());
         return manageTaskService.saveTask(taskDto);
     }
 
     @GetMapping
-    public Page<Task> getAllTasks(
+    public Page<TaskOld> getAllTasks(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -37,7 +35,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public Task updateTask(@PathVariable Long id, @RequestBody TaskDto taskDto) {
+    public TaskOld updateTask(@PathVariable Long id, @RequestBody TaskDto taskDto) {
         log.info("Updating task with id: {}", id);
         return manageTaskService.updateTask(id, taskDto);
     }

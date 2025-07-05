@@ -30,9 +30,9 @@ public class TimeEntry extends AuditEntity {
     private Worker worker;
     @ManyToOne()
     @JoinColumn(name = "task_id", referencedColumnName = "id")
-    private Task task;
+    private TaskOld taskOld;
 
-    public static TimeEntry of(TimeEntryDto timeEntryDto, Optional<Worker> worker, Optional<Task> tasks) {
+    public static TimeEntry of(TimeEntryDto timeEntryDto, Optional<Worker> worker, Optional<TaskOld> tasks) {
         return TimeEntry.builder()
                 .id(timeEntryDto.getId())
                 .description(timeEntryDto.getDescription())
@@ -41,7 +41,7 @@ public class TimeEntry extends AuditEntity {
                 .tag(timeEntryDto.getTag())
                 .totalTime(timeEntryDto.getTotalTime())
                 .worker(worker.orElse(null))
-                .task(tasks.orElse(null))
+                .taskOld(tasks.orElse(null))
                 .build();
     }
 }
