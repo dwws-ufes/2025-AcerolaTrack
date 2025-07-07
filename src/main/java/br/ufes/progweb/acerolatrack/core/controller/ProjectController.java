@@ -5,9 +5,14 @@ import br.ufes.progweb.acerolatrack.core.dto.ProjectUpdateDto;
 import br.ufes.progweb.acerolatrack.core.service.IManageProjectService;
 import br.ufes.progweb.acerolatrack.model.Project;
 import br.ufes.progweb.acerolatrack.model.ProjectReport;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.Endpoint;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.service.spi.InjectService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Endpoint
+@AnonymousAllowed
+@PermitAll
 @RestController
 @RequestMapping("/v1/projects")
 @RequiredArgsConstructor

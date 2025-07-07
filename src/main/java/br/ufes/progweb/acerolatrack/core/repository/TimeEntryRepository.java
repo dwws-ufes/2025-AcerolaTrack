@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface TimeEntryRepository extends JpaRepository<TimeEntry, Long> {
-    @Query("SELECT te FROM TimeEntry te WHERE te.task.project.id = :projectId")
+    @Query("SELECT te FROM TimeEntry te WHERE te.taskOld.project.id = :projectId")
     List<TimeEntry> findByTaskProjectId(Long projectId);
 }

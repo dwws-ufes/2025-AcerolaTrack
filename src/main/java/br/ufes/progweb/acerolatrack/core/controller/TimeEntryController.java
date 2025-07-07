@@ -3,6 +3,9 @@ package br.ufes.progweb.acerolatrack.core.controller;
 import br.ufes.progweb.acerolatrack.core.dto.TimeEntryDto;
 import br.ufes.progweb.acerolatrack.core.service.IManageTimeEntryService;
 import br.ufes.progweb.acerolatrack.model.TimeEntry;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.hilla.Endpoint;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -11,7 +14,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Endpoint
+@AnonymousAllowed
 @RestController
+@PermitAll
 @RequestMapping("/v1/time-entries")
 @Slf4j
 @RequiredArgsConstructor

@@ -50,6 +50,8 @@ public class ManageTaskService implements IManageTaskService {
     }
 
     private List<Worker> getWorkers(TaskDto taskDto) {
+        if (taskDto.getWorkerIds() == null) return List.of();
+
         return taskDto.getWorkerIds().stream()
                 .map(workerRepository::findById)
                 .filter(Optional::isPresent)

@@ -3,7 +3,9 @@ package br.ufes.progweb.acerolatrack.core.controller;
 import br.ufes.progweb.acerolatrack.core.dto.TaskDto;
 import br.ufes.progweb.acerolatrack.core.service.IManageTaskService;
 import br.ufes.progweb.acerolatrack.model.TaskOld;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.Endpoint;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @Endpoint
+@AnonymousAllowed
+@PermitAll
 @RestController
 @RequestMapping("/v1/tasks")
 @RequiredArgsConstructor

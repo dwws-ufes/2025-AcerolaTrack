@@ -2,6 +2,9 @@ package br.ufes.progweb.acerolatrack.core.controller;
 
 import br.ufes.progweb.acerolatrack.core.service.IManageCustomerService;
 import br.ufes.progweb.acerolatrack.model.Customer;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.hilla.Endpoint;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -11,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Endpoint
+@AnonymousAllowed
+@PermitAll
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/v1/customers")

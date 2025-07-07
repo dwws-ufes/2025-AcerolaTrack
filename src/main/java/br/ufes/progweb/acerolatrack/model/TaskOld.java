@@ -42,6 +42,8 @@ public class TaskOld extends AuditEntity {
             )
     )
     private List<Worker> workers;
+
+    @Builder.Default
     private boolean cancelled = false;
 
     public TaskOld of(TaskDto taskDto) {
