@@ -72,13 +72,10 @@ public class TasksView extends VerticalLayout {
 
         grid.addColumn(TaskOld::getName)
                 .setHeader("Name");
-        grid.addColumn(task -> task.getProject())
+        grid.addColumn(task -> task.getProject() == null ? "" : task.getProject().getName())
                 .setHeader("Project");
-        // Pass all Person objects to a grid from a Spring Data repository object
 
         grid.setItems(pageable2.getContent());
-
-//        grid.setItems(task1, task2, task3, task4);
 
         return grid;
     }

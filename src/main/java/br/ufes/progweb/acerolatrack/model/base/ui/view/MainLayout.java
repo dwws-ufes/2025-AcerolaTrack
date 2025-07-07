@@ -83,16 +83,18 @@ public class MainLayout extends AppLayout {
         sideNav.addItem(
                 new SideNavItem("Dashboard", "/dashboard",
                         VaadinIcon.DASHBOARD.create()),
-                new SideNavItem("Orders", "/orders", VaadinIcon.CART.create()),
-                new SideNavItem("Customers", "/customers",
-                        VaadinIcon.USER_HEART.create()),
+//                new SideNavItem("Orders", "/orders", VaadinIcon.CART.create()),
+                new SideNavItem("Create Task", "/tasks/create",
+                        VaadinIcon.TASKS.create()),
+                new SideNavItem("Create Project", "projects/create",
+                        VaadinIcon.ARCHIVE.create()),
                 new SideNavItem("Projects", "/projects",
                         VaadinIcon.PACKAGE.create()),
-                new SideNavItem("Documents", "/documents",
-                        VaadinIcon.RECORDS.create()),
-                new SideNavItem("Tasks", "/tasks", VaadinIcon.LIST.create()),
-                new SideNavItem("Analytics", "/analytics",
-                        VaadinIcon.CHART.create()));
+//                new SideNavItem("Documents", "/documents",
+//                        VaadinIcon.RECORDS.create()),
+                new SideNavItem("Tasks", "/tasks", VaadinIcon.LIST.create()));
+//                new SideNavItem("Analytics", "/analytics",
+//                        VaadinIcon.CHART.create()));
         return sideNav;
     }
 
