@@ -1,16 +1,18 @@
 package br.ufes.progweb.acerolatrack.model.base.ui.view;
 
 import br.ufes.progweb.acerolatrack.core.dto.ProjectDto;
-import br.ufes.progweb.acerolatrack.core.security.AppUserInfo;
 import br.ufes.progweb.acerolatrack.core.service.impl.ManageProjectService;
-import br.ufes.progweb.acerolatrack.model.Project;
-import br.ufes.progweb.acerolatrack.model.Worker;
+import br.ufes.progweb.acerolatrack.model.Status;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
@@ -18,6 +20,7 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @PermitAll
 @Route("projects")
@@ -25,88 +28,107 @@ public class ProjectsView extends HorizontalLayout {
 
     ManageProjectService manageProjectService;
 
-    HorizontalLayout layout = new HorizontalLayout();
-
     @Autowired
-    public ProjectsView(ManageProjectService manageProjectService){
-        TextField projectName = new TextField("Project Name");
-        FormLayout formLayout = new FormLayout();
-        TextArea description = new TextArea();
+    public ProjectsView(ManageProjectService manageProjectService) {
         this.manageProjectService = manageProjectService;
 
-        Binder<Project> binder = new Binder<>(Project.class);
-        Project project = new Project();
+        FormLayout formLayout = new FormLayout();
 
-        // Start by defining the Field instance to use
+        // Create form fields
+        TextField projectName = new TextField("Project Name");
+        TextArea description = new TextArea("Description");
+        DateTimePicker startTime = new DateTimePicker("Start Time");
+        DateTimePicker endTime = new DateTimePicker("End Time");
+        DateTimePicker dueDate = new DateTimePicker("Due Date");
+        ComboBox<Status> status = new ComboBox<>("Status");
+        status.setItems(Status.values());
+        NumberField customerId = new NumberField("Customer ID");
+
+        // Configure description field
+        description.setWidthFull();
+        description.setValueChangeMode(ValueChangeMode.EAGER);
+        description.addValueChangeListener(e -> e.getSource().setHelperText(e.getValue().length() + "/" + 300));
+
+        // Create binder
+        Binder<ProjectDto> binder = new Binder<>(ProjectDto.class);
+        ProjectDto projectDto = new ProjectDto();
+
+        // Bind fields
         binder.forField(projectName)
-                // Finalize by doing the actual binding
-                // to the Person class
-                .bind(
-                        // Callback that loads the title
-                        // from a person instance
-                        Project::getName,
-                        // Callback that saves the title
-                        // in a person instance
-                        Project::setName);
+                .asRequired("Project name is required")
+                .bind(ProjectDto::getName, ProjectDto::setName);
 
         binder.forField(description)
-                // Finalize by doing the actual binding
-                // to the Person class
-                .bind(
-                        // Callback that loads the title
-                        // from a person instance
-                        Project::getDescription,
-                        // Callback that saves the title
-                        // in a person instance
-                        Project::setDescription);
+                .bind(ProjectDto::getDescription, ProjectDto::setDescription);
 
-        description.setWidthFull();
-        description.setLabel("Description");
-        description.setValueChangeMode(ValueChangeMode.EAGER);
-        description.addValueChangeListener(e -> {
-            e.getSource()
-                    .setHelperText(e.getValue().length() + "/" + 300);
+        binder.forField(startTime)
+                .bind(ProjectDto::getStartTime, ProjectDto::setStartTime);
+
+        binder.forField(endTime)
+                .bind(ProjectDto::getEndTime, ProjectDto::setEndTime);
+
+        binder.forField(dueDate)
+                .bind(ProjectDto::getDueDate, ProjectDto::setDueDate);
+
+        binder.forField(status)
+                .asRequired("Status is required")
+                .bind(ProjectDto::getStatus, ProjectDto::setStatus);
+
+        binder.forField(customerId)
+                .withConverter(
+                    number -> number == null ? null : number.longValue(),
+                    value -> value == null ? null : value.doubleValue()
+                )
+                .bind(ProjectDto::getCustomerId, ProjectDto::setCustomerId);
+
+        binder.readBean(projectDto);
+
+        Button createButton = new Button("Create Project");
+        createButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        createButton.setDisableOnClick(true);
+
+        createButton.addClickListener(event -> {
+            if (binder.validate().isOk()) {
+                ProjectDto newProject = new ProjectDto();
+                if (binder.writeBeanIfValid(newProject)) {
+                    // Set current worker
+                    List<Long> workerIds = new ArrayList<>();
+                    workerIds.add(2L); // TODO: Replace with actual current user ID
+                    newProject.setWorkerIds(workerIds);
+
+                    try {
+                        manageProjectService.createProject(newProject);
+                        createButton.setEnabled(true);
+                        Notification.show("Project created successfully!", 3000, Notification.Position.TOP_CENTER);
+                        clearForm(binder);
+                    } catch (Exception e) {
+                        createButton.setEnabled(true);
+                        Notification.show("Error creating project: " + e.getMessage(), 3000, Notification.Position.TOP_CENTER);
+                    }
+                }
+            } else {
+                createButton.setEnabled(true);
+            }
         });
 
-        binder.readBean(project);
+        // Add components to form
+        formLayout.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0", 1),
+                new FormLayout.ResponsiveStep("500px", 2)
+        );
 
-        Button saveButton = new Button("Save",
-                event -> {
-                    try {
-                        binder.writeBean(project);
-                        // A real application would also save
-                        // the updated person
-                        // using the application's backend
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+        formLayout.add(
+                projectName, description,
+                startTime, endTime,
+                dueDate, status,
+                customerId, createButton
+        );
 
-        Button button = new Button("Perform Action");
-        button.setDisableOnClick(true);
-
-        //TODO Usar getCurrentUser para setar o Worker
-        Worker worker = new Worker();
-        worker.setId(2L);
-        worker.setUsername("AASAS");
-
-        ProjectDto projectDto = getProjectDto(worker, project);
-        button.addClickListener(event -> manageProjectService.createProject(projectDto));
-
-        formLayout.setAutoResponsive(true);
-        formLayout.add(projectName, description, button);
         add(formLayout);
     }
 
-    private ProjectDto getProjectDto(Worker worker, Project project) {
-        project.setName(project.getName());
-
+    private void clearForm(Binder<ProjectDto> binder) {
         ProjectDto projectDto = new ProjectDto();
-        projectDto.setName(project.getName());
-        projectDto.setDescription(project.getDescription());
-        projectDto.setStatus(project.getStatus());
-        projectDto.setWorkerIds(new ArrayList<Long>(){{add(worker.getId());}});
-
-        return projectDto;
+        binder.readBean(projectDto);
     }
 }
