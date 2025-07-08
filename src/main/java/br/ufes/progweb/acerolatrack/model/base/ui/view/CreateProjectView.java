@@ -1,7 +1,9 @@
 package br.ufes.progweb.acerolatrack.model.base.ui.view;
 
 import br.ufes.progweb.acerolatrack.core.dto.ProjectDto;
+import br.ufes.progweb.acerolatrack.core.security.CurrentUser;
 import br.ufes.progweb.acerolatrack.core.service.impl.ManageProjectService;
+import br.ufes.progweb.acerolatrack.core.service.impl.ManageUserService;
 import br.ufes.progweb.acerolatrack.model.Status;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -26,11 +28,14 @@ import java.util.List;
 @Route("projects/create")
 public class CreateProjectView extends HorizontalLayout {
 
+    private final CurrentUser currentUser;
     ManageProjectService manageProjectService;
+    ManageUserService manageUserService;
 
     @Autowired
-    public CreateProjectView(ManageProjectService manageProjectService) {
+    public CreateProjectView(ManageUserService manageUserService, ManageProjectService manageProjectService, CurrentUser currentUser) {
         this.manageProjectService = manageProjectService;
+        this.currentUser = currentUser;
 
         FormLayout formLayout = new FormLayout();
 
@@ -80,7 +85,6 @@ public class CreateProjectView extends HorizontalLayout {
                     value -> value == null ? null : value.doubleValue()
                 )
                 .bind(ProjectDto::getCustomerId, ProjectDto::setCustomerId);
-
         binder.readBean(projectDto);
 
         Button createButton = new Button("Create Project");

@@ -86,6 +86,8 @@ public class MainLayout extends AppLayout {
 //                new SideNavItem("Orders", "/orders", VaadinIcon.CART.create()),
                 new SideNavItem("Create Task", "/tasks/create",
                         VaadinIcon.TASKS.create()),
+                new SideNavItem("Time Entries", "/time-entries",
+                        VaadinIcon.LIST_SELECT.create()),
                 new SideNavItem("Add Time Entry", "/time-entries/create",
                         VaadinIcon.CLOCK.create()),
                 new SideNavItem("Create Project", "projects/create",
