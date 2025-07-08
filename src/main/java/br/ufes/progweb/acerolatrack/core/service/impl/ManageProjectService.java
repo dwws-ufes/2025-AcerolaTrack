@@ -115,6 +115,7 @@ public class ManageProjectService implements IManageProjectService {
                 Integer hours = entry.getTotalTime();
 
                 String workerName = worker.getUsername();
+                System.err.println( "start: " + entry.getStartTime() + ", end: " + entry.getEndTime() + ", hours: " + hours);
                 hoursPerWorker.merge(workerName, hours, Integer::sum);
                 totalHours += hours;
             }

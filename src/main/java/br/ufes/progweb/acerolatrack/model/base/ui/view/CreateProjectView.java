@@ -89,15 +89,14 @@ public class CreateProjectView extends HorizontalLayout {
 
         createButton.addClickListener(event -> {
             if (binder.validate().isOk()) {
-                ProjectDto newProject = new ProjectDto();
-                if (binder.writeBeanIfValid(newProject)) {
+                if (binder.writeBeanIfValid(projectDto)) {
                     // Set current worker
                     List<Long> workerIds = new ArrayList<>();
                     workerIds.add(2L); // TODO: Replace with actual current user ID
-                    newProject.setWorkerIds(workerIds);
+                    projectDto.setWorkerIds(workerIds);
 
                     try {
-                        manageProjectService.createProject(newProject);
+                        manageProjectService.createProject(projectDto);
                         createButton.setEnabled(true);
                         Notification.show("Project created successfully!", 3000, Notification.Position.TOP_CENTER);
                         clearForm(binder);

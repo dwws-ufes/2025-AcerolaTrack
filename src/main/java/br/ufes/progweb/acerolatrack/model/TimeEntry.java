@@ -33,13 +33,17 @@ public class TimeEntry extends AuditEntity {
     private TaskOld taskOld;
 
     public static TimeEntry of(TimeEntryDto timeEntryDto, Optional<Worker> worker, Optional<TaskOld> tasks) {
+        var minutes = 0;
+        if (timeEntryDto.getStartTime() != null && timeEntryDto.getEndTime() != null) {
+           minutes = (int) java.time.Duration.between(timeEntryDto.getStartTime(), timeEntryDto.getEndTime()).toMinutes();
+        }
         return TimeEntry.builder()
                 .id(timeEntryDto.getId())
                 .description(timeEntryDto.getDescription())
                 .startTime(timeEntryDto.getStartTime())
                 .endTime(timeEntryDto.getEndTime())
                 .tag(timeEntryDto.getTag())
-                .totalTime(timeEntryDto.getTotalTime())
+                .totalTime(minutes)
                 .worker(worker.orElse(null))
                 .taskOld(tasks.orElse(null))
                 .build();

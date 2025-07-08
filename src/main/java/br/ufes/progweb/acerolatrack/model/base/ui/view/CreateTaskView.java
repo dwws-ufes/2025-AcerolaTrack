@@ -92,24 +92,23 @@ public class CreateTaskView extends HorizontalLayout {
 
         createButton.addClickListener(event -> {
             if (binder.validate().isOk()) {
-                TaskDto newTask = new TaskDto();
-                if (binder.writeBeanIfValid(newTask)) {
+                if (binder.writeBeanIfValid(taskDto)) {
                     try {
                         // Set optional project and dependency IDs
                         Project selectedProject = projectComboBox.getValue();
                         if (selectedProject != null) {
-                            newTask.setProjectId(selectedProject.getId());
+                            taskDto.setProjectId(selectedProject.getId());
                         }
 
                         TaskOld selectedDependency = dependencyComboBox.getValue();
                         if (selectedDependency != null) {
-                            newTask.setDependencyId(selectedDependency.getId());
+                            taskDto.setDependencyId(selectedDependency.getId());
                         }
 
                         // TODO: Set current worker IDs as necessário
-                        newTask.setWorkerIds(List.of(2L));
+                        taskDto.setWorkerIds(List.of(2L));
 
-                        manageTaskService.saveTask(newTask);
+                        manageTaskService.saveTask(taskDto);
                         Notification.show("Task created successfully!", 3000, Notification.Position.TOP_CENTER);
                         clearForm(binder);
                         createButton.setEnabled(true);
@@ -129,15 +128,10 @@ public class CreateTaskView extends HorizontalLayout {
                 new FormLayout.ResponsiveStep("500px", 2)
         );
 
-        H1 title = new H1(currentUser.getWorker(manageUserService).getUsername());
-        H1 title2 = new H1(currentUser.require().getFullName());
-
-
         formLayout.add(
                 taskName, startTime, endTime,
                 projectComboBox, dependencyComboBox,
-                createButton,
-                title, title2
+                createButton
         );
 
         add(formLayout);
