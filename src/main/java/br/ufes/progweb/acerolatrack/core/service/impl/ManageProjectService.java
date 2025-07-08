@@ -111,11 +111,13 @@ public class ManageProjectService implements IManageProjectService {
 
         for (TimeEntry entry : timeEntries) {
             Worker worker = entry.getWorker();
-            Integer hours = entry.getTotalTime();
+            if(entry.getWorker() != null) {
+                Integer hours = entry.getTotalTime();
 
-            String workerName = worker.getUsername();
-            hoursPerWorker.merge(workerName, hours, Integer::sum);
-            totalHours += hours;
+                String workerName = worker.getUsername();
+                hoursPerWorker.merge(workerName, hours, Integer::sum);
+                totalHours += hours;
+            }
         }
 
         return ProjectReport.builder()

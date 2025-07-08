@@ -81,11 +81,13 @@ public class MainLayout extends AppLayout {
     private SideNav getSideNav() {
         SideNav sideNav = new SideNav();
         sideNav.addItem(
-                new SideNavItem("Dashboard", "/dashboard",
+                new SideNavItem("Dashboard", "/project-reports",
                         VaadinIcon.DASHBOARD.create()),
 //                new SideNavItem("Orders", "/orders", VaadinIcon.CART.create()),
                 new SideNavItem("Create Task", "/tasks/create",
                         VaadinIcon.TASKS.create()),
+                new SideNavItem("Add Time Entry", "/time-entries/create",
+                        VaadinIcon.CLOCK.create()),
                 new SideNavItem("Create Project", "projects/create",
                         VaadinIcon.ARCHIVE.create()),
                 new SideNavItem("Projects", "/projects",

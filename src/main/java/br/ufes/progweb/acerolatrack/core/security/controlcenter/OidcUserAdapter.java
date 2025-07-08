@@ -3,6 +3,7 @@ package br.ufes.progweb.acerolatrack.core.security.controlcenter;
 import br.ufes.progweb.acerolatrack.core.security.AppUserInfo;
 import br.ufes.progweb.acerolatrack.core.security.AppUserPrincipal;
 import br.ufes.progweb.acerolatrack.core.security.domain.UserId;
+import br.ufes.progweb.acerolatrack.model.Worker;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -48,7 +49,6 @@ final class OidcUserAdapter implements OidcUser, AppUserPrincipal {
             private final String fullName = requireNonNull(oidcUser.getFullName());
             private final ZoneId zoneId = parseZoneInfo(oidcUser.getZoneInfo());
             private final Locale locale = parseLocale(oidcUser.getLocale());
-
             @Override
             public UserId getUserId(){
                 return userId;

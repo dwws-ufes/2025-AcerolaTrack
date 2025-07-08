@@ -1,8 +1,10 @@
 package br.ufes.progweb.acerolatrack.model.base.ui.view;
 
 import br.ufes.progweb.acerolatrack.core.dto.TaskDto;
+import br.ufes.progweb.acerolatrack.core.security.CurrentUser;
 import br.ufes.progweb.acerolatrack.core.service.impl.ManageProjectService;
 import br.ufes.progweb.acerolatrack.core.service.impl.ManageTaskService;
+import br.ufes.progweb.acerolatrack.core.service.impl.ManageUserService;
 import br.ufes.progweb.acerolatrack.model.Project;
 import br.ufes.progweb.acerolatrack.model.TaskOld;
 import com.vaadin.flow.component.button.Button;
@@ -10,6 +12,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -20,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @PermitAll
@@ -28,11 +32,18 @@ public class CreateTaskView extends HorizontalLayout {
 
     private ManageProjectService manageProjectService;
     private ManageTaskService manageTaskService;
+    private CurrentUser currentUser;
+    private ManageUserService manageUserService;
 
     @Autowired
-    public CreateTaskView(ManageTaskService manageTaskService, ManageProjectService manageProjectService) {
+    public CreateTaskView(CurrentUser currentUser,
+                          ManageTaskService manageTaskService,
+                          ManageProjectService manageProjectService,
+                          ManageUserService manageUserService
+    ) {
         this.manageTaskService = manageTaskService;
         this.manageProjectService = manageProjectService;
+        this.currentUser = currentUser;
 
         FormLayout formLayout = new FormLayout();
 
@@ -66,6 +77,12 @@ public class CreateTaskView extends HorizontalLayout {
         binder.forField(endTime)
                 .bind(TaskDto::getEndTime, TaskDto::setEndTime);
 
+
+        var id = currentUser.getWorker(manageUserService).getId();
+        var idList = new ArrayList<Long>();
+        idList.add(id);
+
+        taskDto.setWorkerIds(idList);
         binder.readBean(taskDto);
 
         // Create button
@@ -112,10 +129,15 @@ public class CreateTaskView extends HorizontalLayout {
                 new FormLayout.ResponsiveStep("500px", 2)
         );
 
+        H1 title = new H1(currentUser.getWorker(manageUserService).getUsername());
+        H1 title2 = new H1(currentUser.require().getFullName());
+
+
         formLayout.add(
                 taskName, startTime, endTime,
                 projectComboBox, dependencyComboBox,
-                createButton
+                createButton,
+                title, title2
         );
 
         add(formLayout);

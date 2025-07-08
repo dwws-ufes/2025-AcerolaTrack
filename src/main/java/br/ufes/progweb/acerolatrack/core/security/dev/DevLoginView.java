@@ -1,5 +1,8 @@
 package br.ufes.progweb.acerolatrack.core.security.dev;
 
+import br.ufes.progweb.acerolatrack.core.security.CurrentUser;
+import br.ufes.progweb.acerolatrack.core.service.impl.ManageUserService;
+import br.ufes.progweb.acerolatrack.model.Worker;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -10,9 +13,13 @@ import com.vaadin.flow.component.page.WebStorage;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.security.AuthenticationContext;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Login view for development.
@@ -25,11 +32,14 @@ class DevLoginView extends Main implements BeforeEnterObserver {
     static final String LOGIN_PATH = "dev-login";
     private static final String CALLOUT_HIDDEN_KEY = "walking-skeleton-dev-login-callout-hidden";
 
+    private CurrentUser currentUser;
+    private ManageUserService manageUserService;
     private final AuthenticationContext authenticationContext;
     private final LoginForm login;
 
-    DevLoginView(AuthenticationContext authenticationContext) {
+    DevLoginView(ManageUserService manageUserService, AuthenticationContext authenticationContext) {
         this.authenticationContext = authenticationContext;
+        this.manageUserService = manageUserService;
 
         // Create the components
         login = new LoginForm();
@@ -94,6 +104,11 @@ class DevLoginView extends Main implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         if (authenticationContext.isAuthenticated()) {
+
+            Pageable pageable = PageRequest.of(0, 10);
+
+            List<Worker> workerList =  manageUserService.getAllWorkers(pageable).getContent().stream().toList();
+
             // Redirect to the main view if the user is already logged in. This makes impersonation easier to work with.
             event.forwardTo("");
             return;

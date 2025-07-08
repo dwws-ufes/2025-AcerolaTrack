@@ -1,13 +1,21 @@
 package br.ufes.progweb.acerolatrack.core.security;
 
+import br.ufes.progweb.acerolatrack.core.repository.WorkerRepository;
+import br.ufes.progweb.acerolatrack.core.service.impl.ManageUserService;
+import br.ufes.progweb.acerolatrack.model.Worker;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -44,7 +52,6 @@ import static java.util.Objects.requireNonNull;
 public class CurrentUser {
 
     private static final Logger log = LoggerFactory.getLogger(CurrentUser.class);
-
     private final SecurityContextHolderStrategy securityContextHolderStrategy;
 
     /**
@@ -52,7 +59,7 @@ public class CurrentUser {
      * <p>
      * This constructor uses the new Spring Security recommendation of accessing the
      * {@link SecurityContextHolderStrategy} as a bean rather than using the static methods of
-     * {@link org.springframework.security.core.context.SecurityContextHolder}.
+     * {@link SecurityContextHolder}.
      * </p>
      *
      * @param securityContextHolderStrategy
@@ -80,6 +87,22 @@ public class CurrentUser {
      */
     public Optional<AppUserInfo> get() {
         return getPrincipal().map(AppUserPrincipal::getAppUser);
+    }
+
+    public Worker getWorker(ManageUserService manageUserService) {
+       String name = get().get().getFullName();
+       Pageable pageable = PageRequest.of(0, 10);
+       List<Worker> workerList = manageUserService.getAllWorkers(pageable).getContent();
+        for (Worker worker : workerList) {
+          if (name.equals(worker.getUsername())) {
+              return worker;
+          }
+        }
+
+        Worker worker = new Worker();
+        worker.setUsername(name);
+        manageUserService.saveWorker(worker);
+        return worker;
     }
 
     /**

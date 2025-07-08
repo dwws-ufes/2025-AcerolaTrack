@@ -2,6 +2,7 @@ package br.ufes.progweb.acerolatrack.core.security.dev;
 
 import br.ufes.progweb.acerolatrack.core.security.AppUserInfo;
 import br.ufes.progweb.acerolatrack.core.security.domain.UserId;
+import br.ufes.progweb.acerolatrack.model.Worker;
 import org.jspecify.annotations.Nullable;
 
 import java.time.ZoneId;

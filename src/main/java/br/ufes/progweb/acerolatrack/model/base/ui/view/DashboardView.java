@@ -1,73 +1,45 @@
 package br.ufes.progweb.acerolatrack.model.base.ui.view;
 
 import br.ufes.progweb.acerolatrack.core.service.impl.ManageProjectService;
-import br.ufes.progweb.acerolatrack.core.service.impl.ManageTaskService;
 import br.ufes.progweb.acerolatrack.model.Project;
-import br.ufes.progweb.acerolatrack.model.TaskOld;
-import com.vaadin.flow.component.grid.GridVariant;
+import br.ufes.progweb.acerolatrack.model.ProjectReport;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
-    @PermitAll
-    @Route("projects-board")
-    public class DashboardView extends VerticalLayout {
+@PermitAll
+@Route("project-reports")
+public class DashboardView extends VerticalLayout {
 
-        private final ManageProjectService manageProjectService;
-        private final ManageTaskService manageTaskService;
+    private final ManageProjectService manageProjectService;
 
-        @Autowired
-        public DashboardView(ManageProjectService manageProjectService, ManageTaskService manageTaskService) {
-            this.manageProjectService = manageProjectService;
-            this.manageTaskService = manageTaskService;
+    @Autowired
+    public DashboardView(ManageProjectService manageProjectService) {
+        this.manageProjectService = manageProjectService;
 
-            TreeGrid<Object> treeGrid = new TreeGrid<>();
+        setSizeFull();
+        Grid<ProjectReport> grid = new Grid<>(ProjectReport.class, false);
 
-            // Coluna do nome (Project ou Task)
-            treeGrid.addHierarchyColumn(item -> {
-                if (item instanceof Project project) {
-                    return "📁 " + project.getName();
-                } else if (item instanceof TaskOld task) {
-                    return "📝 " + task.getName();
-                } else {
-                    return "";
-                }
-            }).setHeader("Name");
+        grid.addColumn(ProjectReport::getProjectName).setHeader("Project Name").setAutoWidth(true);
+        grid.addColumn(ProjectReport::getTotal).setHeader("Spent Time (minutes)").setAutoWidth(true);
 
-            // Coluna de horas calculadas
-            treeGrid.addColumn(item -> {
-                if (item instanceof Project project) {
-                    List<TaskOld> tasks = manageTaskService.getTasksByProject(project);
-                    double totalHours = tasks.stream()
-                            .filter(t -> t.getStartTime() != null && t.getEndTime() != null)
-                            .mapToDouble(t -> Duration.between(t.getStartTime(), t.getEndTime()).toHours())
-                            .sum();
-                    return totalHours + "h";
-                } else if (item instanceof TaskOld task) {
-                    if (task.getStartTime() != null && task.getEndTime() != null) {
-                        long hours = Duration.between(task.getStartTime(), task.getEndTime()).toHours();
-                        return hours + "h";
-                    } else {
-                        return "-";
-                    }
-                } else {
-                    return "";
-                }
-            }).setHeader("Total Hours");
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Project> projectList = manageProjectService.getAllProjects(pageable).getContent();
 
-            treeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        List<ProjectReport> reports = new ArrayList<ProjectReport>();
 
-            // Carregar dados
-            List<Project> projects = manageProjectService.getAllProjects();
-            treeGrid.setItems(projects, project -> manageProjectService.getTasks());
-
-            add(treeGrid);
+        for (Project project : projectList) {
+            reports.add(manageProjectService.getProjectReport(project.getId()));
         }
-    }
 
+        grid.setItems(reports);
+        add(grid);
+    }
 }

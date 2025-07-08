@@ -20,6 +20,7 @@
 package br.ufes.progweb.acerolatrack.core.security;
 
 import br.ufes.progweb.acerolatrack.core.security.domain.UserId;
+import br.ufes.progweb.acerolatrack.model.Worker;
 import org.jspecify.annotations.Nullable;
 
 import java.time.ZoneId;
@@ -153,4 +154,5 @@ public interface AppUserInfo {
     default Locale getLocale() {
         return Locale.getDefault();
     }
+
 }

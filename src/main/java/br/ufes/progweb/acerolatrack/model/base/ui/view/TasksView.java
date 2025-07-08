@@ -60,7 +60,7 @@ public class TasksView extends VerticalLayout {
         projectDto.setStatus(project.getStatus());
         projectDto.setWorkerIds(new ArrayList<Long>(){{add(worker.getId());}});
 
-        manageProjectService.createProject(projectDto);
+//        manageProjectService.createProject(projectDto);
 
         // Sets items as a collection
         Pageable pageable = PageRequest.of(0, 10);
