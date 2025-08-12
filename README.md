@@ -10,7 +10,15 @@ Sistema de gerenciamento de tempo e tarefas desenvolvido com Spring Boot e Vaadi
 
 ## Configuração do Ambiente
 
-### 1. Subindo o Container Docker
+### 1. Configurar variáveis de ambiente
+Antes de executar o projeto, você precisa configurar as variáveis de ambiente:
+```bash
+cp .env.example .env
+```
+
+E alterae as variáveis que irá utilizadae
+
+### 2. Subindo o Container Docker
 
 O projeto utiliza Docker para o banco de dados. Para iniciar o container:
 
@@ -22,7 +30,7 @@ cd dev/docker
 docker-compose up -d
 ```
 
-### 2. Compilando a Aplicação
+### 3. Compilando a Aplicação
 
 Na raiz do projeto, execute:
 
@@ -34,7 +42,7 @@ Na raiz do projeto, execute:
 .\mvnw clean install
 ```
 
-### 3. Executando a Aplicação
+### 4. Executando a Aplicação
 
 Após a compilação, execute:
 

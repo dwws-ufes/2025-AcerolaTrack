@@ -17,8 +17,9 @@ spring:
   application:
     name: "acerolatrack"
   datasource:
-    url: "jdbc:postgresql://172.18.108.55:5432/postgres"
-    username: "postgres"
-    password: "example"
+    url: "jdbc:postgresql://localhost:${POSTGRES_PORT:5438}/postgres"
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:example}
+    driver-class-name: org.postgresql.Driver
   jackson:
     property-naming-strategy: SNAKE_CASE
