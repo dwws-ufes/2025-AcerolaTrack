@@ -57,3 +57,5 @@ types.d.ts
 index.html
 # Contains secrets that shouldn't go into the repository
 config/local/
+
+.env
