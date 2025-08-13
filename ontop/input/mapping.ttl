@@ -1,0 +1,53 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix acr: <http://acerolatrack.org/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+# Define custom AcerolaTrack vocabulary
+acr:Worker a owl:Class ;
+    rdfs:subClassOf foaf:Person, prov:Agent ;
+    rdfs:label "Worker"@en .
+
+acr:role a owl:DatatypeProperty ;
+    rdfs:domain acr:Worker ;
+    rdfs:range xsd:string ;
+    rdfs:label "role"@en .
+
+# Mapping for Worker table
+<#WorkerMapping>
+    rr:logicalTable [ rr:tableName "worker" ];
+    rr:subjectMap [
+        rr:template "http://acerolatrack.org/worker/{id}";
+        rr:class acr:Worker, foaf:Person, prov:Agent;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate acr:role;
+        rr:objectMap [ rr:column "role" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate foaf:name;
+        rr:objectMap [ rr:column "username" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate prov:wasAssociatedWith;
+        rr:objectMap [
+            rr:parentTriplesMap <#ProjectMapping>;
+            rr:joinCondition [
+                rr:child "id";
+                rr:parent "worker_id";
+            ];
+        ];
+    ] .
+
+# Mapping for Project-Worker relationship through project_report
+<#ProjectMapping>
+    rr:logicalTable [ rr:tableName "project_report" ];
+    rr:subjectMap [
+        rr:template "http://acerolatrack.org/project/{project_id}";
+        rr:class prov:Activity;
+    ] .

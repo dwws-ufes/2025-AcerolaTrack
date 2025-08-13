@@ -6,7 +6,12 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
-      - db:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U app -d appdb" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
       
   adminer:
     image: adminer
@@ -14,5 +19,27 @@ services:
     ports:
       - "${ADMINER_PORT}:8080"
 
+  ontop:
+    image: ontop/ontop:latest
+    container_name: ontop
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      #ONTOP_ONTOLOGY_FILE: /opt/ontop/input/ontology.ttl
+      ONTOP_MAPPING_FILE: /opt/ontop/input/mapping.ttl
+      ONTOP_PROPERTIES_FILE: /opt/ontop/input/ontop.properties
+      # (opcional) habilita UI do Portal na raiz /
+      #ONTOP_PORTAL_FILE: /opt/ontop/input/portal.toml
+      # (opcional) CORS durante desenvolvimento
+      ONTOP_CORS_ALLOWED_ORIGINS: "*"
+      # inicialização preguiçosa e modo dev (opcionais)
+      ONTOP_LAZY_INIT: "true"
+      ONTOP_DEV_MODE: "true"
+    volumes:
+      - ../../ontop/input:/opt/ontop/input
+      - ../../ontop/jdbc:/opt/ontop/jdbc
+    ports:
+      - "8085:8080"
 volumes:
   db:
