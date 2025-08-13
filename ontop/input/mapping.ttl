@@ -51,3 +51,15 @@ acr:role a owl:DatatypeProperty ;
         rr:template "http://acerolatrack.org/project/{project_id}";
         rr:class prov:Activity;
     ] .
+
+# Mapping for Customer table
+<#CustomerMapping>
+    rr:logicalTable [ rr:tableName "customer" ];
+    rr:subjectMap [
+        rr:template "http://acerolatrack.org/customer/{id}";
+        rr:class foaf:Person;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate foaf:name;
+        rr:objectMap [ rr:column "name" ];
+    ].
