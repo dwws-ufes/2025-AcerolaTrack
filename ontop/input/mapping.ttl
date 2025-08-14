@@ -7,59 +7,72 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix acr: <http://acerolatrack.org/ontology#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-
-# Define custom AcerolaTrack vocabulary
-acr:Worker a owl:Class ;
-    rdfs:subClassOf foaf:Person, prov:Agent ;
-    rdfs:label "Worker"@en .
-
-acr:role a owl:DatatypeProperty ;
-    rdfs:domain acr:Worker ;
-    rdfs:range xsd:string ;
-    rdfs:label "role"@en .
+@prefix dg: <https://w3id.org/dingo#> .
+@prefix pto: <http://pto.example/ontology#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 
 # Mapping for Worker table
 <#WorkerMapping>
     rr:logicalTable [ rr:tableName "worker" ];
     rr:subjectMap [
         rr:template "http://acerolatrack.org/worker/{id}";
-        rr:class acr:Worker, foaf:Person, prov:Agent;
+        rr:class dg:Person;
     ];
     rr:predicateObjectMap [
-        rr:predicate acr:role;
-        rr:objectMap [ rr:column "role" ];
+        rr:predicate pto:hasRole;
+        rr:objectMap [ 
+            rr:template "http://acerolatrack.org/role/{role}";
+            rr:termType rr:IRI;
+            rr:class dg:Role;
+        ];
     ];
     rr:predicateObjectMap [
         rr:predicate foaf:name;
         rr:objectMap [ rr:column "username" ];
+    ] .
+
+# Mapping for Project table
+<#ProjectTableMapping>
+    rr:logicalTable [ rr:tableName "project" ];
+    rr:subjectMap [
+        rr:template "http://acerolatrack.org/project/{id}";
+        rr:class dg:Project;
     ];
     rr:predicateObjectMap [
-        rr:predicate prov:wasAssociatedWith;
+        rr:predicate rdfs:label;
+        rr:objectMap [ rr:column "name" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate schema:description;
+        rr:objectMap [ rr:column "description" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate prov:wasAttributedTo;
         rr:objectMap [
-            rr:parentTriplesMap <#ProjectMapping>;
+            rr:parentTriplesMap <#CustomerMapping>;
             rr:joinCondition [
-                rr:child "id";
-                rr:parent "worker_id";
+                rr:child "custumer_id";
+                rr:parent "id";
             ];
         ];
     ] .
 
-# Mapping for Project-Worker relationship through project_report
-<#ProjectMapping>
-    rr:logicalTable [ rr:tableName "project_report" ];
-    rr:subjectMap [
-        rr:template "http://acerolatrack.org/project/{project_id}";
-        rr:class prov:Activity;
-    ] .
+# # Mapping for Project-Worker relationship through project_report
+# <#ProjectAllocationMapping>
+#     rr:logicalTable [ rr:tableName "project_report" ];
+#     rr:subjectMap [
+#         rr:template "http://acerolatrack.org/project/{project_id}";
+#         rr:class prov:Activity;
+#     ] .
 
-# Mapping for Customer table
-<#CustomerMapping>
-    rr:logicalTable [ rr:tableName "customer" ];
-    rr:subjectMap [
-        rr:template "http://acerolatrack.org/customer/{id}";
-        rr:class foaf:Person;
-    ];
-    rr:predicateObjectMap [
-        rr:predicate foaf:name;
-        rr:objectMap [ rr:column "name" ];
-    ].
+# # Mapping for Customer table
+# <#CustomerMapping>
+#     rr:logicalTable [ rr:tableName "customer" ];
+#     rr:subjectMap [
+#         rr:template "http://acerolatrack.org/customer/{id}";
+#         rr:class foaf:Person;
+#     ];
+#     rr:predicateObjectMap [
+#         rr:predicate foaf:name;
+#         rr:objectMap [ rr:column "name" ];
+#     ].

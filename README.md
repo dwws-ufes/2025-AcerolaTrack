@@ -73,3 +73,48 @@ Se encontrar problemas com a aplicação:
 1. Limpe o cache do Maven: `./mvnw clean`
 2. Verifique se a porta 8080 está disponível
 3. Verifique os logs da aplicação no console
+
+## Web Semântica
+
+Consultas alvo que tentamos abordar com a ontologia e o sistema WEB:
+
+- Listar todos os projetos
+
+``` C#
+
+PREFIX dg: <https://w3id.org/dingo#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?project ?projectName
+WHERE {
+    ?project a dg:Project ;
+            rdfs:label ?projectName .
+}
+ORDER BY ?projectName
+
+```
+
+- Consultar Workers
+
+```sparql
+PREFIX dg: <https://w3id.org/dingo#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX pto: <http://pto.example/ontology#>
+
+SELECT ?worker ?name ?role
+WHERE {
+    ?worker a dg:Person ;
+            foaf:name ?name ;
+            pto:hasRole ?role .
+}
+ORDER BY ?name
+```
+
+
+- Consultar todas as tasks de um projeto.
+
+- Consultar todas as pessoas em um projeto (project report).
+
+- Consultar todas as _time entries_ relacionadas a uma determinada _Task_
+
+- Consultar todas as pessoas que trabalharam em uma task
