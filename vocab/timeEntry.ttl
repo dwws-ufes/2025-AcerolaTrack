@@ -1,5 +1,5 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix acerola: <http://acerolatrack.example/ontology#> .
+@prefix pto: <http://pto.example/ontology#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix foaf:   <http://xmlns.com/foaf/0.1/> .
@@ -23,65 +23,65 @@ dg:Role a rdfs:Class ;
     rdfs:comment "Function assumed by an entity in a context." .
 
 # Classes customizadas para seu sistema
-acerola:Task a rdfs:Class ;
+pto:Task a rdfs:Class ;
     rdfs:label "Task" ;
     rdfs:comment "A unit of work within a project." ;
     rdfs:subClassOf schema:Action .
 
-acerola:TimeEntry a rdfs:Class ;
+pto:TimeEntry a rdfs:Class ;
     rdfs:label "Time Entry" ;
     rdfs:comment "A record of time spent on a task by a person." .
 
 ### --- Propriedades de Relacionamento ---
 # Pessoa → Tarefa (associação)
-acerola:assignedTo a rdf:Property ;
-    rdfs:domain acerola:Task ;
+pto:assignedTo a rdf:Property ;
+    rdfs:domain pto:Task ;
     rdfs:range dg:Person ;
     rdfs:label "assigned to" ;
     rdfs:comment "Links a task to the person responsible." .
 
 # Tarefa → Projeto (hierarquia)
-acerola:partOfProject a rdf:Property ;
-    rdfs:domain acerola:Task ;
+pto:partOfProject a rdf:Property ;
+    rdfs:domain pto:Task ;
     rdfs:range dg:Project ;
     rdfs:label "part of project" ;
     rdfs:subPropertyOf dcterms:isPartOf .  # Reuso de Dublin Core
 
 # Time Entry → Tarefa (registro)
-acerola:recordsWorkOn a rdf:Property ;
-    rdfs:domain acerola:TimeEntry ;
-    rdfs:range acerola:Task ;
+pto:recordsWorkOn a rdf:Property ;
+    rdfs:domain pto:TimeEntry ;
+    rdfs:range pto:Task ;
     rdfs:label "records work on" .
 
 # Pessoa → Time Entry (autoria)
-acerola:recordedBy a rdf:Property ;
-    rdfs:domain acerola:TimeEntry ;
+pto:recordedBy a rdf:Property ;
+    rdfs:domain pto:TimeEntry ;
     rdfs:range dg:Person ;
     rdfs:label "recorded by" ;
     rdfs:subPropertyOf prov:wasAttributedTo .  # Opcional: link ao PROV-O
 
 # Pessoa → Role (contextual)
-acerola:hasRole a rdf:Property ;
+pto:hasRole a rdf:Property ;
     rdfs:domain dg:Person ;
     rdfs:range dg:Role ;
     rdfs:label "has role" ;
     rdfs:comment "Describes a person's role in a specific context (e.g., 'Developer' in Project X)." .
 
 ### --- Exemplo de Instância ---
-dg:ProjectX a dg:Project ;
-    rdfs:label "AcerolaTrack Development" .
+# dg:ProjectX a dg:Project ;
+#     rdfs:label "ptoTrack Development" .
 
-dg:JohnDoe a dg:Person ;
-    foaf:name "John Doe" ;
-    acerola:hasRole dg:Developer .
+# dg:JohnDoe a dg:Person ;
+#     foaf:name "John Doe" ;
+#     pto:hasRole dg:Developer .
 
-acerola:Task1 a acerola:Task ;
-    rdfs:label "Implement RDF Model" ;
-    acerola:assignedTo dg:JohnDoe ;
-    acerola:partOfProject dg:ProjectX .
+# pto:Task1 a pto:Task ;
+#     rdfs:label "Implement RDF Model" ;
+#     pto:assignedTo dg:JohnDoe ;
+#     pto:partOfProject dg:ProjectX .
 
-acerola:TimeEntry1 a acerola:TimeEntry ;
-    acerola:recordedBy dg:JohnDoe ;
-    acerola:recordsWorkOn acerola:Task1 ;
-    schema:startTime "2023-01-01T09:00:00"^^xsd:dateTime ;
-    schema:endTime "2023-01-01T12:00:00"^^xsd:dateTime .
+# pto:TimeEntry1 a pto:TimeEntry ;
+#     pto:recordedBy dg:JohnDoe ;
+#     pto:recordsWorkOn pto:Task1 ;
+#     schema:startTime "2023-01-01T09:00:00"^^xsd:dateTime ;
+#     schema:endTime "2023-01-01T12:00:00"^^xsd:dateTime .
