@@ -23,3 +23,5 @@ spring:
     driver-class-name: org.postgresql.Driver
   jackson:
     property-naming-strategy: SNAKE_CASE
+  profiles:
+    active: dev
