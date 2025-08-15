@@ -94,24 +94,77 @@ ORDER BY ?projectName
 
 ```
 
-- Consultar Workers
+- Listar todos os Workers
 
-```sparql
+``` C#
+PREFIX dg: <https://w3id.org/dingo#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?worker ?username
+WHERE {
+    ?worker a dg:Person ;
+            foaf:name ?username ;
+            schema:active true .
+}
+ORDER BY ?username
+```
+
+- Consultar Workers com Roles específicos (TODO)
+
+``` C#
 PREFIX dg: <https://w3id.org/dingo#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX pto: <http://pto.example/ontology#>
+PREFIX schema: <http://schema.org/>
 
 SELECT ?worker ?name ?role
 WHERE {
     ?worker a dg:Person ;
             foaf:name ?name ;
-            pto:hasRole ?role .
+            pto:hasRole ?role ;
+            schema:active true .
+    FILTER(REGEX(STR(?role), "WORKER|MANAGER"))
 }
 ORDER BY ?name
 ```
 
 
-- Consultar todas as tasks de um projeto.
+- Consultar todas as tasks
+
+``` C#
+PREFIX pto: <http://pto.example/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?task ?description ?creationDate ?dueDate
+WHERE {
+    ?task a pto:Task ;
+          rdfs:label ?description ;
+          dcterms:created ?creationDate .
+    OPTIONAL { ?task schema:dueDate ?dueDate }
+}
+ORDER BY ?creationDate
+```
+
+- Consultar todas as tasks de um projeto específico
+
+``` C#
+PREFIX pto: <http://pto.example/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?task ?taskName ?startTime ?endTime
+WHERE {
+    ?task a pto:Task ;
+          rdfs:label ?taskName ;
+          pto:partOfProject <http://acerolatrack.org/project/1> ;  # Substitua 1 pelo ID do projeto
+          schema:startTime ?startTime ;
+          schema:endTime ?endTime .
+}
+ORDER BY ?startTime
+```
 
 - Consultar todas as pessoas em um projeto (project report).
 

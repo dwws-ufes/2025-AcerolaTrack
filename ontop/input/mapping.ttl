@@ -5,7 +5,6 @@
 @prefix time: <http://www.w3.org/2006/time#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix acr: <http://acerolatrack.org/ontology#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix dg: <https://w3id.org/dingo#> .
 @prefix pto: <http://pto.example/ontology#> .
@@ -21,14 +20,17 @@
     rr:predicateObjectMap [
         rr:predicate pto:hasRole;
         rr:objectMap [ 
-            rr:template "http://acerolatrack.org/role/{role}";
+            rr:template "https://w3id.org/dingo/role/{role}";
             rr:termType rr:IRI;
-            rr:class dg:Role;
         ];
     ];
     rr:predicateObjectMap [
         rr:predicate foaf:name;
         rr:objectMap [ rr:column "username" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate schema:active;
+        rr:objectMap [ rr:column "active" ];
     ] .
 
 # Mapping for Project table
@@ -57,22 +59,66 @@
         ];
     ] .
 
-# # Mapping for Project-Worker relationship through project_report
-# <#ProjectAllocationMapping>
-#     rr:logicalTable [ rr:tableName "project_report" ];
-#     rr:subjectMap [
-#         rr:template "http://acerolatrack.org/project/{project_id}";
-#         rr:class prov:Activity;
-#     ] .
+# Mapping for Customer table
+<#CustomerMapping>
+    rr:logicalTable [ rr:tableName "customer" ];
+    rr:subjectMap [
+        rr:template "http://acerolatrack.org/customer/{id}";
+        rr:class dg:Person;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate foaf:name;
+        rr:objectMap [ rr:column "name" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate schema:identifier;
+        rr:objectMap [ rr:column "cpf" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate schema:active;
+        rr:objectMap [ rr:column "active" ];
+    ] .
 
-# # Mapping for Customer table
-# <#CustomerMapping>
-#     rr:logicalTable [ rr:tableName "customer" ];
-#     rr:subjectMap [
-#         rr:template "http://acerolatrack.org/customer/{id}";
-#         rr:class foaf:Person;
-#     ];
-#     rr:predicateObjectMap [
-#         rr:predicate foaf:name;
-#         rr:objectMap [ rr:column "name" ];
-#     ].
+# Mapping for TaskOld table (as task)
+<#TaskMapping>
+    rr:logicalTable [ rr:tableName "task" ];
+    rr:subjectMap [
+        rr:template "http://acerolatrack.org/task/{id}";
+        rr:class pto:Task;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate rdfs:label;
+        rr:objectMap [ rr:column "name" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate schema:startTime;
+        rr:objectMap [ 
+            rr:column "start_time";
+            rr:datatype xsd:dateTime;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate schema:endTime;
+        rr:objectMap [ 
+            rr:column "end_time";
+            rr:datatype xsd:dateTime;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate pto:partOfProject;
+        rr:objectMap [
+            rr:parentTriplesMap <#ProjectTableMapping>;
+            rr:joinCondition [
+                rr:child "project_id";
+                rr:parent "id";
+            ];
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate schema:active;
+        rr:objectMap [ 
+            rr:template "false{cancelled}";
+            rr:termType rr:Literal;
+            rr:datatype xsd:boolean;
+        ];
+    ] .
