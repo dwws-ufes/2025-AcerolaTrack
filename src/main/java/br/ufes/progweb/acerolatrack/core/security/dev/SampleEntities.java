@@ -1,8 +1,6 @@
 package br.ufes.progweb.acerolatrack.core.security.dev;
 
-import br.ufes.progweb.acerolatrack.core.repository.ProjectRepository;
-import br.ufes.progweb.acerolatrack.core.repository.TaskRepository;
-import br.ufes.progweb.acerolatrack.core.repository.WorkerRepository;
+import br.ufes.progweb.acerolatrack.core.repository.*;
 import br.ufes.progweb.acerolatrack.model.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +18,8 @@ public class SampleEntities {
     @Bean
     CommandLineRunner initDatabase(WorkerRepository workerRepository,
                                  ProjectRepository projectRepository,
-                                 TaskRepository taskRepository) {
+                                 TaskRepository taskRepository,
+                                 TimeEntryRepository timeEntryRepository) {
         return args -> {
             // Verificar se já existem dados
             if (workerRepository.count() > 0) {
@@ -49,8 +48,16 @@ public class SampleEntities {
             worker2.setRole(Worker.Role.WORKER);
             worker2.setActive(true);
 
+            Worker manager2 = new Worker();
+            worker2.setUsername("lucal.manager");
+            worker2.setEmail("lucas.manager@example.com");
+            worker2.setPassword("password");
+            worker2.setRole(Worker.Role.MANAGER);
+            worker2.setActive(true);
+
             // Salvar workers primeiro
             var savedWorkers = workerRepository.saveAll(Arrays.asList(manager, worker1, worker2));
+            workerRepository.save(manager2);
             
             // Create Project
             Project project = Project.builder()
@@ -87,6 +94,39 @@ public class SampleEntities {
                     .build();
 
             taskRepository.save(task2);
+
+            // Create TimeEntries
+            TimeEntry entry1 = TimeEntry.builder()
+                    .description("Initial project setup and configuration")
+                    .startTime(LocalDateTime.now().minusDays(2))
+                    .endTime(LocalDateTime.now().minusDays(2).plusHours(4))
+                    .tag("setup")
+                    .totalTime(240) // 4 hours in minutes
+                    .worker(savedWorkers.get(1)) // alice.dev
+                    .taskOld(savedTask1)
+                    .build();
+
+            TimeEntry entry2 = TimeEntry.builder()
+                    .description("Database schema design")
+                    .startTime(LocalDateTime.now().minusDays(1))
+                    .endTime(LocalDateTime.now().minusDays(1).plusHours(3))
+                    .tag("database")
+                    .totalTime(180) // 3 hours in minutes
+                    .worker(savedWorkers.get(0)) // john.manager
+                    .taskOld(savedTask1)
+                    .build();
+
+            TimeEntry entry3 = TimeEntry.builder()
+                    .description("Authentication module implementation")
+                    .startTime(LocalDateTime.now().minusHours(5))
+                    .endTime(LocalDateTime.now().minusHours(2))
+                    .tag("auth")
+                    .totalTime(180) // 3 hours in minutes
+                    .worker(savedWorkers.get(2)) // bob.dev
+                    .taskOld(task2)
+                    .build();
+
+            timeEntryRepository.saveAll(Arrays.asList(entry1, entry2, entry3));
         };
     }
 }

@@ -165,9 +165,107 @@ WHERE {
 }
 ORDER BY ?startTime
 ```
+- Consultar todas as tasks de uma pessoa
 
-- Consultar todas as pessoas em um projeto (project report).
+``` C#
+PREFIX pto: <http://pto.example/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?task ?taskName ?startTime ?endTime
+WHERE {
+    ?task pto:assignedTo <http://acerolatrack.org/worker/3> ;  # Substitua 1 pelo ID do worker
+          a pto:Task ;
+          rdfs:label ?taskName ;
+          schema:startTime ?startTime ;
+          schema:endTime ?endTime .
+}
+ORDER BY ?startTime
+```
+
+- Consultar todas as pessoas em uma task
+
+``` C#
+PREFIX pto: <http://pto.example/ontology#>
+PREFIX dg: <https://w3id.org/dingo#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX schema: <http://schema.org/>
+
+SELECT DISTINCT ?worker ?name ?role ?isActive
+WHERE {
+    # Task específica e seus workers
+    <http://acerolatrack.org/task/1> pto:assignedTo ?worker .  # Substitua 1 pelo ID da task
+    
+    # Informações do worker
+    ?worker a dg:Person ;
+            foaf:name ?name ;
+            pto:hasRole ?role ;
+            schema:active ?isActive .
+}
+ORDER BY ?name
+```
+
+- Consultar todas as pessoas em um projeto.
+``` C#
+PREFIX pto: <http://pto.example/ontology#>
+PREFIX dg: <https://w3id.org/dingo#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX schema: <http://schema.org/>
+
+SELECT DISTINCT ?worker ?name ?role
+WHERE {
+    # Encontra todas as tasks do projeto específico
+    ?task pto:partOfProject <http://acerolatrack.org/project/1> .  # Substitua 1 pelo ID do projeto
+    
+    # Encontra os workers associados a essas tasks
+    ?task pto:assignedTo ?worker .
+    
+    # Obtém informações do worker
+    ?worker a dg:Person ;
+            foaf:name ?name ;
+            pto:hasRole ?role .
+}
+ORDER BY ?name
+```
+
+- Todas as timeEntries de um Worker especpifico
+
+``` C#
+PREFIX pto: <http://pto.example/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?timeEntry ?description ?startTime ?endTime ?duration
+WHERE {
+    ?timeEntry a pto:TimeEntry ;
+              pto:recordedBy <http://acerolatrack.org/worker/1> ;  # Substitua 1 pelo ID do worker
+              rdfs:label ?description ;
+              schema:startTime ?startTime ;
+              schema:endTime ?endTime ;
+              schema:duration ?duration .
+}
+ORDER BY ?startTime
+```
 
 - Consultar todas as _time entries_ relacionadas a uma determinada _Task_
 
-- Consultar todas as pessoas que trabalharam em uma task
+``` C#
+PREFIX pto: <http://pto.example/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT ?timeEntry ?description ?worker ?workerName ?startTime ?endTime ?duration
+WHERE {
+    ?timeEntry a pto:TimeEntry ;
+              pto:recordsWorkOn <http://acerolatrack.org/task/1> ;  # Substitua 1 pelo ID da task
+              rdfs:label ?description ;
+              schema:startTime ?startTime ;
+              schema:endTime ?endTime ;
+              schema:duration ?duration ;
+              pto:recordedBy ?worker .
+    
+    ?worker foaf:name ?workerName .
+}
+ORDER BY ?startTime
+```

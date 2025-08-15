@@ -47,6 +47,13 @@ pto:partOfProject a rdf:Property ;
     rdfs:label "part of project" ;
     rdfs:subPropertyOf dcterms:isPartOf .  # Reuso de Dublin Core
 
+# Projeto → Worker (associação)
+pto:hasWorker a rdf:Property ;
+    rdfs:domain dg:Project ;
+    rdfs:range dg:Person ;
+    rdfs:label "has worker" ;
+    rdfs:comment "Links a project to its assigned workers." .
+
 # Time Entry → Tarefa (registro)
 pto:recordsWorkOn a rdf:Property ;
     rdfs:domain pto:TimeEntry ;
@@ -66,6 +73,24 @@ pto:hasRole a rdf:Property ;
     rdfs:range dg:Role ;
     rdfs:label "has role" ;
     rdfs:comment "Describes a person's role in a specific context (e.g., 'Developer' in Project X)." .
+
+# Mapeamento para relação Project-Worker
+<#ProjectWorkerMapping>
+    rr:logicalTable [ 
+        rr:sqlQuery """
+            SELECT project_id, worker_id 
+            FROM project_report
+        """
+    ];
+    rr:subjectMap [
+        rr:template "http://acerolatrack.org/project/{project_id}";
+    ];
+    rr:predicateObjectMap [
+        rr:predicate pto:hasWorker;
+        rr:objectMap [
+            rr:template "http://acerolatrack.org/worker/{worker_id}";
+        ];
+    ] .
 
 ### --- Exemplo de Instância ---
 # dg:ProjectX a dg:Project ;

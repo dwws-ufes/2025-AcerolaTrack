@@ -122,3 +122,77 @@
             rr:datatype xsd:boolean;
         ];
     ] .
+
+# Mapeamento para relação Task-Worker
+<#TaskWorkerMapping>
+    rr:logicalTable [ 
+        rr:sqlQuery """
+            SELECT task_id, worker_id 
+            FROM task_workers_join
+        """
+    ];
+    rr:subjectMap [
+        rr:template "http://acerolatrack.org/task/{task_id}";
+    ];
+    rr:predicateObjectMap [
+        rr:predicate pto:assignedTo;
+        rr:objectMap [
+            rr:template "http://acerolatrack.org/worker/{worker_id}";
+        ];
+    ] .
+
+
+# Mapeamento para TimeEntry
+<#TimeEntryMapping>
+    rr:logicalTable [ rr:tableName "time_entry" ];
+    rr:subjectMap [
+        rr:template "http://acerolatrack.org/timeentry/{id}";
+        rr:class pto:TimeEntry;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate rdfs:label;
+        rr:objectMap [ rr:column "description" ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate schema:startTime;
+        rr:objectMap [ 
+            rr:column "start_time";
+            rr:datatype xsd:dateTime;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate schema:endTime;
+        rr:objectMap [ 
+            rr:column "end_time";
+            rr:datatype xsd:dateTime;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate schema:duration;
+        rr:objectMap [ 
+            rr:column "total_time";
+            rr:datatype xsd:integer;
+        ];
+    ];
+    # Relação com Worker
+    rr:predicateObjectMap [
+        rr:predicate pto:recordedBy;
+        rr:objectMap [
+            rr:parentTriplesMap <#WorkerMapping>;
+            rr:joinCondition [
+                rr:child "worker_id";
+                rr:parent "id";
+            ];
+        ];
+    ];
+    # Relação com Task
+    rr:predicateObjectMap [
+        rr:predicate pto:recordsWorkOn;
+        rr:objectMap [
+            rr:parentTriplesMap <#TaskMapping>;
+            rr:joinCondition [
+                rr:child "task_id";
+                rr:parent "id";
+            ];
+        ];
+    ] .
