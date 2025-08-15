@@ -1,6 +1,7 @@
 package br.ufes.progweb.acerolatrack;
 
 import com.vaadin.flow.server.VaadinServlet;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,8 +22,8 @@ public class AcerolatrackApplication {
 	}
 
 	@Bean
-	public ServletRegistrationBean frontendServletBean() {
-		ServletRegistrationBean bean = new ServletRegistrationBean<>(new VaadinServlet() {
+	public ServletRegistrationBean<VaadinServlet> frontendServletBean() {
+		ServletRegistrationBean<VaadinServlet> bean = new ServletRegistrationBean<>(new VaadinServlet() {
 			@Override
 			protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 				if (!serveStaticOrWebJarRequest(req, resp)) {

@@ -9,6 +9,6 @@
  * </p>
  */
 @NullMarked
-package com.example.app.taskmanagement.domain;
+package br.ufes.progweb.acerolatrack.model;
 
 import org.jspecify.annotations.NullMarked;
