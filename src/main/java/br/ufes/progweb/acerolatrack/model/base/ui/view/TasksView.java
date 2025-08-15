@@ -1,7 +1,7 @@
 package br.ufes.progweb.acerolatrack.model.base.ui.view;
 
 import br.ufes.progweb.acerolatrack.core.service.impl.ManageTaskService;
-import br.ufes.progweb.acerolatrack.model.TaskOld;
+import br.ufes.progweb.acerolatrack.model.Task;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -27,7 +27,7 @@ public class TasksView extends VerticalLayout {
 
     private final ManageTaskService manageTaskService;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-    private Grid<TaskOld> grid;
+    private Grid<Task> grid;
 
     @Autowired
     public TasksView(ManageTaskService manageTaskService) {
@@ -37,9 +37,9 @@ public class TasksView extends VerticalLayout {
     }
 
     private Component getTasksGrid() {
-        grid = new Grid<>(TaskOld.class, false);
+        grid = new Grid<>(Task.class, false);
 
-        grid.addColumn(TaskOld::getName)
+        grid.addColumn(Task::getName)
                 .setHeader("Name")
                 .setAutoWidth(true)
                 .setFlexGrow(1);
@@ -79,7 +79,7 @@ public class TasksView extends VerticalLayout {
         return grid;
     }
 
-    private void confirmDelete(TaskOld task) {
+    private void confirmDelete(Task task) {
         ConfirmDialog dialog = new ConfirmDialog();
         dialog.setHeader("Confirm Delete");
         dialog.setText("Are you sure you want to delete this task?");
@@ -105,7 +105,7 @@ public class TasksView extends VerticalLayout {
 
     private void refreshGrid() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<TaskOld> tasks = manageTaskService.getAllTasks(pageable);
+        Page<Task> tasks = manageTaskService.getAllTasks(pageable);
         grid.setItems(tasks.getContent());
     }
 }

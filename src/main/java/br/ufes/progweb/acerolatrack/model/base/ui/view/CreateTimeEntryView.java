@@ -6,7 +6,7 @@ import br.ufes.progweb.acerolatrack.core.security.CurrentUser;
 import br.ufes.progweb.acerolatrack.core.service.impl.ManageTaskService;
 import br.ufes.progweb.acerolatrack.core.service.impl.ManageTimeEntryService;
 import br.ufes.progweb.acerolatrack.core.service.impl.ManageUserService;
-import br.ufes.progweb.acerolatrack.model.TaskOld;
+import br.ufes.progweb.acerolatrack.model.Task;
 import br.ufes.progweb.acerolatrack.model.Worker;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -65,11 +65,11 @@ public class CreateTimeEntryView extends VerticalLayout {
 //        workerComboBox.setItems(workers);
 //        workerComboBox.setItemLabelGenerator(Worker::getUsername);
 
-        ComboBox<TaskOld> taskComboBox = new ComboBox<>("Task");
+        ComboBox<Task> taskComboBox = new ComboBox<>("Task");
         Pageable pageable = PageRequest.of(0, 10);
-        List<TaskOld> tasks = manageTaskService.getAllTasks(pageable).getContent(); // ajuste conforme seu serviço real
+        List<Task> tasks = manageTaskService.getAllTasks(pageable).getContent(); // ajuste conforme seu serviço real
         taskComboBox.setItems(tasks);
-        taskComboBox.setItemLabelGenerator(TaskOld::getName);
+        taskComboBox.setItemLabelGenerator(Task::getName);
 
         // Binder
         Binder<TimeEntryDto> binder = new Binder<>(TimeEntryDto.class);
@@ -99,7 +99,7 @@ public class CreateTimeEntryView extends VerticalLayout {
             if (binder.validate().isOk()) {
                 if (binder.writeBeanIfValid(timeEntryDto)) {
                     try {
-                        TaskOld selectedTask = taskComboBox.getValue();
+                        Task selectedTask = taskComboBox.getValue();
                         if (selectedTask != null) {
                             timeEntryDto.setTaskId(selectedTask.getId());
                         } else {

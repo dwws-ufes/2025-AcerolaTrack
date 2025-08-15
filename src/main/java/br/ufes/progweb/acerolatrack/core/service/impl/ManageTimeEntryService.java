@@ -5,7 +5,7 @@ import br.ufes.progweb.acerolatrack.core.repository.TaskRepository;
 import br.ufes.progweb.acerolatrack.core.repository.TimeEntryRepository;
 import br.ufes.progweb.acerolatrack.core.repository.WorkerRepository;
 import br.ufes.progweb.acerolatrack.core.service.IManageTimeEntryService;
-import br.ufes.progweb.acerolatrack.model.TaskOld;
+import br.ufes.progweb.acerolatrack.model.Task;
 import br.ufes.progweb.acerolatrack.model.TimeEntry;
 import br.ufes.progweb.acerolatrack.model.Worker;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class ManageTimeEntryService implements IManageTimeEntryService {
         return workerId != null ? workerRepository.findById(workerId) : null;
     }
 
-    private Optional<TaskOld> getTask(final Long taskId) {
+    private Optional<Task> getTask(final Long taskId) {
         return taskId != null ? taskRepository.findById(taskId) : null;
     }
 

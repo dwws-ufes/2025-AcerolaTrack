@@ -1,61 +1,56 @@
 package br.ufes.progweb.acerolatrack.model;
 
-import br.ufes.progweb.acerolatrack.model.base.domain.AbstractEntity;
+import br.ufes.progweb.acerolatrack.core.dto.TaskDto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
-import org.jspecify.annotations.Nullable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "task")
-public class Task extends AbstractEntity<Long> {
-
-    public static final int DESCRIPTION_MAX_LENGTH = 255;
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Task extends AuditEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "task_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    @OneToOne()
+    @JoinColumn(name = "dependency_id", referencedColumnName = "id")
+    private Task dependency;
+    @ManyToOne()
+    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    private Project project;
+    @ManyToMany()
+    @JoinTable(
+            name = "task_workers_join",
+            joinColumns = @JoinColumn(
+                    name = "task_id",
+                    referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "worker_id",
+                    referencedColumnName = "id"
+            )
+    )
+    private List<Worker> workers;
 
-    @Column(name = "description", nullable = false, length = DESCRIPTION_MAX_LENGTH)
-    @Size(max = DESCRIPTION_MAX_LENGTH)
-    private String description;
+    @Builder.Default
+    private boolean cancelled = false;
 
-    @Column(name = "creation_date", nullable = false)
-    private Instant creationDate;
-
-    @Column(name = "due_date")
-    @Nullable
-    private LocalDate dueDate;
-
-    @Override
-    public @Nullable Long getId() {
-        return id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public @Nullable LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(@Nullable LocalDate dueDate) {
-        this.dueDate = dueDate;
+    public Task of(TaskDto taskDto) {
+        return Task.builder()
+                .name(taskDto.getName())
+                .startTime(taskDto.getStartTime())
+                .endTime(taskDto.getEndTime())
+                .build();
     }
 }

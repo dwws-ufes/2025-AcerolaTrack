@@ -30,9 +30,9 @@ public class TimeEntry extends AuditEntity {
     private Worker worker;
     @ManyToOne()
     @JoinColumn(name = "task_id", referencedColumnName = "id")
-    private TaskOld taskOld;
+    private Task taskOld;
 
-    public static TimeEntry of(TimeEntryDto timeEntryDto, Optional<Worker> worker, Optional<TaskOld> tasks) {
+    public static TimeEntry of(TimeEntryDto timeEntryDto, Optional<Worker> worker, Optional<Task> tasks) {
         var minutes = 0;
         if (timeEntryDto.getStartTime() != null && timeEntryDto.getEndTime() != null) {
            minutes = (int) java.time.Duration.between(timeEntryDto.getStartTime(), timeEntryDto.getEndTime()).toMinutes();

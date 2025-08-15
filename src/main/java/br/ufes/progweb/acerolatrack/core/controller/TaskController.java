@@ -2,7 +2,7 @@ package br.ufes.progweb.acerolatrack.core.controller;
 
 import br.ufes.progweb.acerolatrack.core.dto.TaskDto;
 import br.ufes.progweb.acerolatrack.core.service.IManageTaskService;
-import br.ufes.progweb.acerolatrack.model.TaskOld;
+import br.ufes.progweb.acerolatrack.model.Task;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.Endpoint;
 import jakarta.annotation.security.PermitAll;
@@ -25,13 +25,13 @@ public class TaskController {
     private final IManageTaskService manageTaskService;
 
     @PostMapping("/create")
-    public TaskOld createTask(@RequestBody TaskDto taskDto) {
+    public Task createTask(@RequestBody TaskDto taskDto) {
         log.info("Creating task: {}", taskDto.getName());
         return manageTaskService.saveTask(taskDto);
     }
 
     @GetMapping
-    public Page<TaskOld> getAllTasks(
+    public Page<Task> getAllTasks(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -39,7 +39,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public TaskOld updateTask(@PathVariable Long id, @RequestBody TaskDto taskDto) {
+    public Task updateTask(@PathVariable Long id, @RequestBody TaskDto taskDto) {
         log.info("Updating task with id: {}", id);
         return manageTaskService.updateTask(id, taskDto);
     }

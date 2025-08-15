@@ -6,7 +6,7 @@ import br.ufes.progweb.acerolatrack.core.service.impl.ManageProjectService;
 import br.ufes.progweb.acerolatrack.core.service.impl.ManageTaskService;
 import br.ufes.progweb.acerolatrack.core.service.impl.ManageUserService;
 import br.ufes.progweb.acerolatrack.model.Project;
-import br.ufes.progweb.acerolatrack.model.TaskOld;
+import br.ufes.progweb.acerolatrack.model.Task;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -58,10 +58,10 @@ public class CreateTaskView extends HorizontalLayout {
         projectComboBox.setItems(manageProjectService.getAllProjects(pageable).getContent());
         projectComboBox.setItemLabelGenerator(Project::getName);
 
-        ComboBox<TaskOld> dependencyComboBox = new ComboBox<>("Dependency");
+        ComboBox<Task> dependencyComboBox = new ComboBox<>("Dependency");
         // TODO: Carregar tasks do seu service ou repository
          dependencyComboBox.setItems(manageTaskService.getAllTasks(pageable).getContent());
-        dependencyComboBox.setItemLabelGenerator(TaskOld::getName);
+        dependencyComboBox.setItemLabelGenerator(Task::getName);
 
         // Binder
         Binder<TaskDto> binder = new Binder<>(TaskDto.class);
@@ -100,7 +100,7 @@ public class CreateTaskView extends HorizontalLayout {
                             taskDto.setProjectId(selectedProject.getId());
                         }
 
-                        TaskOld selectedDependency = dependencyComboBox.getValue();
+                        Task selectedDependency = dependencyComboBox.getValue();
                         if (selectedDependency != null) {
                             taskDto.setDependencyId(selectedDependency.getId());
                         }
